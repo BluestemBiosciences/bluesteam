@@ -8,7 +8,7 @@ Created on Thu Sep  1 16:17:45 2022
 import numpy as np
 from matplotlib import pyplot as plt
 import biosteam as bst
-from biosteam import BinaryDistillation, ShortcutColumn
+from biosteam import BinaryDistillation, ShortcutColumn, Flash
 import thermosteam as tmo
 from thermosteam import Chemical, Stream
 import pandas as pd
@@ -23,8 +23,10 @@ class BlueStream:
     def __init__(self,composition_dict,
                  products,
                  impurities,
-                 ID=f's_{int(1e6*round(np.random.rand(), 6))}'):
+                 ID=None):
         chems = []
+        if not ID:
+            ID = f's_{int(1e6*round(np.random.rand(), 6))}'
         for k in composition_dict.keys():
             if type(k)==str:
                 chems.append(Chemical(k))
@@ -45,6 +47,8 @@ class BlueStream:
     def __repr__(self):
         self.stream.show('cmol100')
         return f''
+    
+
 class SequentialDistillationResult:
     def __init__(self, result):
         self.stream = result[0][0]
@@ -53,17 +57,30 @@ class SequentialDistillationResult:
         self.score = result[1]
         self.columns = result[2]
         self.azeotropes = result[3]
-    
+        self.exceptions = []
+        
     def __repr__(self):
-        return f'\nSequentialDistillationResult\nStream: {self.stream.ID}\nProducts: {self.products}\nImpurities: {self.impurities}\nAzeotropic key pairs ({len(self.azeotropes)} total): {self.azeotropes}\nScore: {self.score}\n'
+        return f'\nSequentialDistillationResult\nStream: {self.stream.ID}\nProducts: {self.products}\nImpurities: {self.impurities}\nAzeotropic key pairs ({len(self.azeotropes)} total): {self.azeotropes}\nExceptions: {self.exceptions}\nScore: {self.score}\n'
 
 get_heating_demand = lambda unit: sum([i.duty for i in unit.heat_utilities if i.duty*i.flow>0])
 
 def get_vle_components_sorted(stream, cutoff_Z_mol=1e-3):
     # vle_chemicals = stream.vle_chemicals
     sorted_list = list([i for i in stream.vle_chemicals if stream.imol[i.ID]/stream.F_mol>cutoff_Z_mol])
-    sorted_list.sort(key=lambda i: i.Tb)
+    sorted_list.sort(key=lambda i: i.Tb if i.Tb else np.inf)
     return sorted_list
+
+def add_flash_vessel(in_stream,
+                    V, 
+                    ID=None,
+                    P=101325., 
+                    vessel_material='Stainless steel 316',
+                    ):
+    if not ID:
+        ID=f'{in_stream.ID}_Flash'
+    return Flash(ID, ins=in_stream, outs=(f'{ID}_0', f'{ID}_1'), 
+                     V=V, 
+                     P=P)
 
 def add_distillation_column(in_stream,
                             LHK, 
@@ -125,49 +142,88 @@ def is_a_productless_stream(stream, p_chem_IDs, cutoff_Z_mol=0.2):
 def run_sequential_distillation(stream, products, impurities, 
                                       cutoff_Z_mol=1e-3,
                                 score_offset_per_azeotrope=1e9):
-    p_chems = [tmo.Chemical(p) for p in products if type(p)==str]
+    # chemicals = get_thermo().chemicals
+    chemicals = stream.chemicals
+    tmo.settings.set_thermo(chemicals)
+    p_chems = [chemicals[p] for p in products if type(p)==str]
     p_chem_IDs = [pc.ID for pc in p_chems]
-    i_chems = [tmo.Chemical(i) for i in impurities if type(i)==str]
+    i_chems = [chemicals[i] for i in impurities if type(i)==str]
     i_chem_IDs = [ic.ID for ic in i_chems]
     sorted_chems = get_vle_components_sorted(stream, 1e-3)
-    tmo.settings.set_thermo(stream.chemicals)
     columns = []
     transient_sinkless_streams = [stream]
     azeotropes = []
-    while transient_sinkless_streams:
-        # print(transient_sinkless_streams)
-        for s in transient_sinkless_streams:
-            sorted_chems = get_vle_components_sorted(s, 1e-3)
-            LHK=tuple([i.ID for i in sorted_chems[:2]])
-            # print(LHK)
-            # s.show()
-            try:
-                new_col = add_distillation_column(in_stream=s,
-                                                  LHK=LHK,
-                                                  Lr=0.99999, Hr=0.99999,
-                                                  P=101325./100,
-                                                  column_type ='BinaryDistillation'
-                                                  )
-                new_col.simulate()
-                columns.append(new_col)
-            except:
-                new_col = add_distillation_column(in_stream=s,
-                                                  LHK=LHK,
-                                                  Lr=0.99999, Hr=0.99999,
-                                                  P=101325./100,
-                                                  column_type ='ShortcutColumn'
-                                                  )
-                new_col.simulate()
-                columns.append(new_col)
-                azeotropes.append(LHK)
-        transient_sinkless_streams.clear()
-        transient_sinkless_streams += get_sinkless_streams(columns, p_chem_IDs)
-        # print(transient_sinkless_streams)
+    try:
+        while transient_sinkless_streams:
+            # print(transient_sinkless_streams)
+            for s in transient_sinkless_streams:
+                sorted_chems = get_vle_components_sorted(s, 1e-3)
+                LHK=tuple([i.ID for i in sorted_chems[:2]])
+                # print(LHK)
+                # s.show()
+                try:
+                    try:
+                        new_col = add_distillation_column(in_stream=s,
+                                                          LHK=LHK,
+                                                          Lr=0.99999, Hr=0.99999,
+                                                          P=101325./100,
+                                                          column_type ='BinaryDistillation'
+                                                          )
+                        new_col.simulate()
+                        columns.append(new_col)
+                    except:
+                        try:
+                            new_col = add_distillation_column(in_stream=s,
+                                                              LHK=LHK,
+                                                              Lr=0.99999, Hr=0.99999,
+                                                              P=101325./10,
+                                                              column_type ='BinaryDistillation'
+                                                              )
+                            new_col.simulate()
+                            columns.append(new_col)
+                        except Exception as e:
+                            if 'heating agent' in str(e):
+                                new_col = add_flash_vessel(in_stream=s,
+                                                           V=s.imol[LHK[0]]/sum([s.imol[s_chem.ID] for s_chem in s.vle_chemicals]),
+                                                           P=101325./10,
+                                                           )
+                                new_col.simulate()
+                                columns.append(new_col)
+                            else:
+                                raise e
+                except:
+                    try:
+                        new_col = add_distillation_column(in_stream=s,
+                                                          LHK=LHK,
+                                                          Lr=0.99999, Hr=0.99999,
+                                                          P=101325./100,
+                                                          column_type ='ShortcutColumn'
+                                                          )
+                        new_col.simulate()
+                        columns.append(new_col)
+                        azeotropes.append(LHK)
+                    except:
+                        new_col = add_distillation_column(in_stream=s,
+                                                          LHK=LHK,
+                                                          Lr=0.99999, Hr=0.99999,
+                                                          P=101325./10,
+                                                          column_type ='ShortcutColumn'
+                                                          )
+                        new_col.simulate()
+                        columns.append(new_col)
+                        azeotropes.append(LHK)
+            transient_sinkless_streams.clear()
+            transient_sinkless_streams += get_sinkless_streams(columns, p_chem_IDs)
+            # print(transient_sinkless_streams)
+        
+        score = sum(get_heating_demand(col) for col in columns)/sum([stream.imol[pci] for pci in p_chem_IDs])
+        score += score_offset_per_azeotrope*len(azeotropes)
+        return SequentialDistillationResult(result=((stream, p_chem_IDs, i_chem_IDs), score, columns, azeotropes))
+    except Exception as e:
+        result = SequentialDistillationResult(result=((stream, p_chem_IDs, i_chem_IDs), np.inf, [bst.Unit('EmptyUnit')], []))
+        result.exceptions.append(e)
+        return result
     
-    score = sum(get_heating_demand(col) for col in columns)/sum([stream.imol[pci] for pci in p_chem_IDs])
-    score += score_offset_per_azeotrope*len(azeotropes)
-    return SequentialDistillationResult(result=((stream, p_chem_IDs, i_chem_IDs), score, columns, azeotropes))
-
 def get_sorted_results(streams, print_results=False, file_to_save=None):
     results = [run_sequential_distillation(stream.stream, stream.products, stream.impurities)
                for stream in streams]

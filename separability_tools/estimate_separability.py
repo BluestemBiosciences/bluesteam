@@ -6,6 +6,7 @@ Created on Wed Sep  7 23:51:43 2022
 """
 
 from bluesteam.separability_tools.utils import BlueStream, run_sequential_distillation, get_sorted_results
+from thermosteam import Chemical
 from datetime import datetime
 
 #%% Run comparison
@@ -59,6 +60,48 @@ streams = [
     
     ]
 
+# Add a few organic acid streams
+
+HP = Chemical('HP', search_ID='3-Hydroxypropionic acid')
+HP.copy_models_from(Chemical('LacticAcid'), names = ['V', 'Hvap', 'Psat', 'mu', 'kappa'])
+HP.Tm = 15 + 273.15 # CAS says < 25 C
+HP.Tb = 179.75 + 273.15 # CAS
+HP.Hf = Chemical('LacticAcid').Hf
+HP.default() # this defaults certain missing properties -- such as surface tension -- to that of water. Use with caution.
+
+MA = Chemical('Muconic acid', search_ID='3588-17-8')
+FDA = Chemical(ID='FDA', search_ID = '3238-40-2')
+
+
+orgacids = ['Levulinic Acid',
+'Adipic Acid',
+'Glutamic Acid',
+'Acetic Acid',
+'Acrylic Acid',
+'Salicylic Acid',
+'Itaconic Acid',
+FDA,
+'Glycolic Acid',
+'Formic Acid',
+# MA,
+HP,
+'Terephthalic Acid',
+'Succinic Acid']
+
+for acid in orgacids:
+    acid_ID = acid
+    if not type(acid) == str:
+        acid_ID = acid.ID
+    streams.append(BlueStream(
+        ID=None,
+        composition_dict = {
+        'Water' : 1000,
+        acid : 20,
+        },
+        products = [acid_ID,],
+        impurities = ['Water'],
+        ))
+    
 # Save file with the current time in the name (for a custom file name, edit the file_to_save string)
 dateTimeObj = datetime.now()
 minute = '0' + str(dateTimeObj.minute) if len(str(dateTimeObj.minute))==1 else str(dateTimeObj.minute)
