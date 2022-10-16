@@ -38,6 +38,12 @@ from ._tea import *
 
 _system_loaded = False
 _chemicals_loaded = False
+try:
+    chemicals = tmo.settings.get_thermo()
+    bst.settings.set_thermo(chemicals)
+    _chemicals_loaded = True
+except:
+    pass
 
 def load():
     if not _chemicals_loaded: _load_chemicals()
@@ -48,8 +54,10 @@ def load():
         dct.update(flowsheet.to_dict())
 
 def _load_chemicals():
+    import biosteam as bst
     global chemicals, _chemicals_loaded
     chemicals = create_chemicals()
+    bst.settings.set_thermo(chemicals)
     _chemicals_loaded = True
 
 def _load_system():
@@ -58,7 +66,7 @@ def _load_system():
     global corn_sys, corn_tea, flowsheet, all_areas, _system_loaded
     flowsheet = bst.Flowsheet('corn')
     F.set_flowsheet(flowsheet)
-    bst.settings.set_thermo(chemicals)
+    
     load_process_settings()
     corn_sys = create_system()
     corn_sys.simulate()

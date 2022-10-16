@@ -75,7 +75,7 @@ class BluesTEA():
         #         self.__dict__[i] = tea.__getattribute__(i)
         
         system.simulate()
-        fermentation_reactor.effluent.price = products_and_market_prices['Ethanol'] * fermentation_reactor.effluent.imass['Ethanol']/fermentation_reactor.effluent.F_mass
+        # fermentation_reactor.effluent.price = products_and_market_prices['Ethanol'] * fermentation_reactor.effluent.imass['Ethanol']/fermentation_reactor.effluent.F_mass
         tea.solve_IRR()
         
     def get_system_from_APD(self, new_ID):

@@ -11,6 +11,7 @@
 import numpy as np
 import thermosteam as tmo
 from thermosteam import Chemical, Stream
+from biorefineries.corn._chemicals import create_chemicals
 set_thermo = tmo.settings.set_thermo
 
 __all__ = ('BlueStream', 'dextrose_equivalent',)
@@ -21,15 +22,21 @@ class BlueStream:
                  products,
                  impurities,
                  ID=None):
-        # chems = []
-        # if not ID:
-        #     ID = f's_{int(1e6*round(np.random.rand(), 6))}'
-        # for k in composition_dict.keys():
-        #     if type(k)==str:
-        #         chems.append(Chemical(k))
-        #     else:
-        #         chems.append(k)
-        # set_thermo(chems)
+        corn_chems = create_chemicals()
+        chems = [c for c in corn_chems]
+        if not ID:
+            ID = f's_{int(1e6*round(np.random.rand(), 6))}'
+        
+        for k in composition_dict.keys():
+            if type(k)==str:
+                try:
+                    chems.append(corn_chems[k])
+                except:
+                    chems.append(Chemical(k))
+            else:
+                chems.append(k)
+        set_thermo(chems)
+        
         self.ID = ID
         self.stream = stream = Stream(ID=ID)
         for k, v in composition_dict.items():
