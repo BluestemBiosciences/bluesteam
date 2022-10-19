@@ -161,3 +161,6 @@ class BluesTEA():
         self.stream_to_separation.F_mass *= new_capacity/self.feedstock.F_mass
         self.fermentation_reactor.broth_to_load = self.stream_to_separation
         self.feedstock.F_mass = new_capacity
+        
+    def check_mass_balance(self):
+        return sum(self.fermentation_reactor.mass_in) - sum(self.fermentation_reactor.mass_out)
