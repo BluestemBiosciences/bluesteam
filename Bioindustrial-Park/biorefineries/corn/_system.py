@@ -132,27 +132,40 @@ def create_system(ID='corn_sys', flowsheet=None):
         recycled_process_water.F_mass = F_mass_dry_corn * (1. - SLURRY_SOLIDS_CONTENT) / SLURRY_SOLIDS_CONTENT - F_mass_others
     
     P311 = bst.Pump('P311', V307-0, P=1e6)
-    E312 = bst.HXprocess('E312', (P311-0, None), U=0.56783, ft=1.0, T_lim0=410.)
-    E313 = u.JetCooker('E313', (E312-0, steam))
+    
+    # E312 = bst.HXprocess('E312', (P311-0, None), U=0.56783, ft=1.0, T_lim0=410.)
+    # E313 = u.JetCooker('E313', (E312-0, steam))
+    E313 = u.JetCooker('E313', (P311-0, steam))
+    
     V314 = u.CookedSlurrySurgeTank('V314', E313-0)
     P308 = bst.Pump('P308', V314-0)
-    P308-0-1-E312
-    # E315 = bst.HXutility('E315', E312-1, U=0.9937, ft=1.0, T= + 273.15)
     
-    HX101 = bst.HXutility('HX101', E312-1, U=1.5, T=87 + 273.15, ft=1.0)
+    # P308-0-1-E312
+    # # E315 = bst.HXutility('E315', E312-1, U=0.9937, ft=1.0, T= + 273.15)
+    # HX101 = bst.HXutility('HX101', E312-1, U=1.5, T=87 + 273.15, ft=1.0)
+    
+    HX101 = bst.HXutility('HX101', P308-0, U=1.5, T=87 + 273.15, ft=1.0)
+    
     V310 = u.Liquefaction('V310', HX101-0)
-    E316 = bst.HXprocess('E316', (V310-0, None), U=0.85174, ft=1.0, dT=12)
+    
+    # E316 = bst.HXprocess('E316', (V310-0, None), U=0.85174, ft=1.0, dT=12)
     
     V317 = u.GlucoAmylaseTank('V317', gluco_amylase)
     P318 = bst.Pump('P318', V317-0)
     V319 = u.SulfuricAcidTank('V319', sulfuric_acid)
     P320 = bst.Pump('P320', V319-0)
-    V321 = u.Saccharification('V321', (P318-0, P320-0, E316-0))
+    
+    # V321 = u.Saccharification('V321', (P318-0, P320-0, E316-0))
+    V321 = u.Saccharification('V321', (P318-0, P320-0, V310-0))
+    
     P322 = bst.Pump('P322', V321-0)
-    E401 = bst.HXprocess('E401', (P322-0, None),
-                         phase0='l', phase1='l',
-                         U=0.99370, ft=0.85)
-    E402 = bst.HXutility('E402', E401-0, ft=0.95, U=0.9937, T=32.2 + 273.15)
+    
+    # E401 = bst.HXprocess('E401', (P322-0, None),
+    #                      phase0='l', phase1='l',
+    #                      U=0.99370, ft=0.85)
+    # E402 = bst.HXutility('E402', E401-0, ft=0.95, U=0.9937, T=32.2 + 273.15)
+    E402 = bst.HXutility('E402', P322-0, ft=0.95, U=0.9937, T=32.2 + 273.15)
+    
     V403 = u.YeastTank('V403', yeast)
     P404 = bst.Pump('P404', V403-0)
     K401 = bst.IsentropicCompressor('K401', ins=air_fresh, outs=('compressed_air',), 
@@ -181,17 +194,25 @@ def create_system(ID='corn_sys', flowsheet=None):
         except:
             H401._cost = lambda: 0
     P406 = bst.Pump('P406', V405-1)
-    P407 = bst.Pump('P407', E401-1)
-    P407-0-1-E316
-    V412 = bst.StorageTank('V412', E316-1, tau=4)
+    # P407 = bst.Pump('P407', E401-1)
+    
+    P407 = bst.Pump('P407', ())
+    # P407-0-1-E316
+    # V412 = bst.StorageTank('V412', E316-1, tau=4)
+    V412 = bst.StorageTank('V412', P407-0, tau=4)
+    
     PX = bst.Pump('PX', V412-0)
-    V409 = bst.VentScrubber('V409', (scrubber_water, V405-0), gas=('CO2', 'O2'))
+    V409 = bst.VentScrubber('V409', (scrubber_water, V405-0), gas=('CO2', 'O2', 'N2'))
     V409.specification = update_scrubber_wash_water
     P410 = bst.Pump('P410', V409-1)
     MX = bst.Mixer('MX', [P410-0, P406-0])
-    MX-0-1-E401
-    E413 = bst.HXprocess('E413', (PX-0, None), U=0.79496, ft=1.0)
-    P411 = bst.Pump('P411', E413-0)
+    
+    # MX-0-1-E401
+    MX-0-0-P407
+    
+    # E413 = bst.HXprocess('E413', (PX-0, None), U=0.79496, ft=1.0)
+    # P411 = bst.Pump('P411', E413-0)
+    P411 = bst.Pump('P411', PX-0)
     
     ethanol_purification_sys = create_ethanol_purification_system(
         ins=[P411-0, denaturant],
@@ -221,9 +242,12 @@ def create_system(ID='corn_sys', flowsheet=None):
     fu.T501.Rmin = 0.0001
     fu.T503_T507.k = 1.05
     fu.T501.P = 101325
-    fu.P502-0-1-E413
     fu.MX4.denaturant_fraction = 0.04345
-    V601 = bst.MixTank('V601', E413-1)
+    
+    # fu.P502-0-1-E413
+    # V601 = bst.MixTank('V601', E413-1)
+    V601 = bst.MixTank('V601', fu.P502-0)
+    
     P602 = bst.Pump('P602', V601-0)
     C603 = u.DDGSCentrifuge('C603', P602-0,
         split=dict(

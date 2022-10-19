@@ -381,8 +381,16 @@ class SimultaneousSaccharificationFermentation(bst.BatchBioreactor):
         return yeast_yield/0.82709, etoh_yield/0.51143
     
     def get_power(self):
-        return (1.9 + 0.2*(self.aeration_rate*(self.aeration_time/self.tau)-10e-3))*self.air.imass['O2'] # ~1.9-2.1 kWh/kg-O2 from Humbird et al. 2017
-    
+        aeration_rate = self.aeration_rate
+        aeration_time = self.aeration_time
+        tau = self.tau
+        air_imass_O2 = self.air.imass['O2']
+        effective_aeration_rate = aeration_rate*(aeration_time/tau)
+        if effective_aeration_rate>=10e-3:
+            return (1.9 + 0.2*(effective_aeration_rate-10e-3))*air_imass_O2 # ~1.9-2.1 kWh/kg-O2 from Humbird et al. 2017
+        else:
+            cost_at_10_mmol_per_L_per_h = 1.9*air_imass_O2 
+            return cost_at_10_mmol_per_L_per_h * (1. - (10e-3-effective_aeration_rate)/10e-3) # linear interpolation; 0 to 1.9 kWh/kg-O2
     
 SSF = SimultaneousSaccharificationFermentation
 
