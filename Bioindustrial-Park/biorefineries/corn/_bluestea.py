@@ -6,7 +6,7 @@ Created on Thu Oct 13 11:38:02 2022
 """
 from biorefineries.corn._tea import create_tea
 from biorefineries.corn.load_corn import load_set_and_get_corn_upstream_sys
-from biosteam import System, SolidsCentrifuge, StorageTank
+from biosteam import System, SolidsCentrifuge, StorageTank, report
 from apd.apd_utils import get_separation_units
 
 __all__=['BluesTEA',]
@@ -103,7 +103,7 @@ class BluesTEA():
                                 outs=('S401_solid_waste', 'S401_1'),
                                 solids=['Yeast'], split={'Yeast':0.995})
         S401.simulate()
-        APD_units = get_separation_units(stream=S401-1, print_progress=True)
+        APD_units = get_separation_units(stream=S401-1, print_progress=False, plot_graph=True)
         new_sys = System.from_units(ID=new_ID, units=[S401]+list(APD_units))
         if simulate:
             new_sys.simulate()
@@ -164,3 +164,12 @@ class BluesTEA():
         
     def check_mass_balance(self):
         return sum(self.fermentation_reactor.mass_in) - sum(self.fermentation_reactor.mass_out)
+    
+    def unit_result_tables(self):
+        return report.unit_result_tables(self.system.units)
+    
+    def cost_table(self):
+        return report.cost_table(self.tea)
+    
+    def cashflow_table(self):
+        return self.tea.get_cashflow_table()
