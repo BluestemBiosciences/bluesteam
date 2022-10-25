@@ -18,11 +18,13 @@ stream_1 = BlueStream(
         'Water' : 1000, # Keys: Chemicals; Use CAS IDs where unsure of names # Values: molar flows (kmol/h)
         'AdipicAcid' : 20,
         'Yeast': 1,
-        'CO2': 457,
+        # 'CO2': 457,
         },
         products = ['AdipicAcid'],
         impurities = ['Water'],
         )
+
+stream_1.stream.F_mass *= 127101/17874 # temporary fix
 
 tea_1 = BluesTEA(
     system_ID = 'sys1',
@@ -36,6 +38,8 @@ tea_1 = BluesTEA(
                  aeration_rate=15e-3,
                  )
 
+tea_1.set_upstream_feed_capacity(1109.08) # a way to update the upstream feed capacity such that the bluestream total flow is automatically updated
+
 
 #%% Ethanol
 
@@ -47,11 +51,12 @@ stream_2 = BlueStream(
         'Water' : 1000, # Keys: Chemicals; Use CAS IDs where unsure of names # Values: molar flows (kmol/h)
         'Ethanol' : 40,
         'Yeast': 1,
-        'CO2': 457,
+        # 'CO2': 457,
         },
         products = ['Ethanol'],
         impurities = ['Water'],
         )
+stream_2.stream.F_mass *= 127101/17874 # temporary fix
 
 tea_2 = BluesTEA(
     system_ID = 'sys2',

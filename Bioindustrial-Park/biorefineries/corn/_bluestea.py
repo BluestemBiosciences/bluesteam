@@ -39,6 +39,7 @@ class BluesTEA():
                fermentation_residence_time=100., # h
                bluestream=None, # broth output from fermentation, including microbe
                add_storage_units=True,
+               add_upstream_impurities_to_bluestream=False,
                ):
         
         self.products = {}
@@ -103,7 +104,7 @@ class BluesTEA():
                                 outs=('S401_solid_waste', 'S401_1'),
                                 solids=['Yeast'], split={'Yeast':0.995})
         S401.simulate()
-        APD_units = get_separation_units(stream=S401-1, print_progress=False, plot_graph=True)
+        APD_units = get_separation_units(stream=S401-1, print_progress=False, plot_graph=False)
         new_sys = System.from_units(ID=new_ID, units=[S401]+list(APD_units))
         if simulate:
             new_sys.simulate()
@@ -161,6 +162,7 @@ class BluesTEA():
         self.stream_to_separation.F_mass *= new_capacity/self.feedstock.F_mass
         self.fermentation_reactor.broth_to_load = self.stream_to_separation
         self.feedstock.F_mass = new_capacity
+        self.system.simulate()
         
     def check_mass_balance(self):
         return sum(self.fermentation_reactor.mass_in) - sum(self.fermentation_reactor.mass_out)
