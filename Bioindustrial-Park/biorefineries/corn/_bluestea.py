@@ -37,11 +37,13 @@ class BluesTEA():
                #                              'Yield':0.8 # %theoretical
                #                              },
                fermentation_residence_time=100., # h
+               fermentation_feed_glucose_concentration=228.57, #g/L
                bluestream=None, # broth output from fermentation, including microbe
                add_storage_units=True,
                add_upstream_impurities_to_bluestream=False,
                ):
         
+        self.system_ID = system_ID
         self.products = {}
         self.system_up_to_fermentation = system_up_to_fermentation =\
             load_set_and_get_corn_upstream_sys(ID=system_ID+'_conversion',
@@ -102,7 +104,7 @@ class BluesTEA():
     def get_system_from_APD(self, new_ID, simulate=True):
         S401 = SolidsCentrifuge('S401', ins=self.stream_to_separation, 
                                 outs=('S401_solid_waste', 'S401_1'),
-                                solids=['Yeast'], split={'Yeast':0.995})
+                                solids=['Yeast'], split={'Yeast':1-1e-4})
         S401.simulate()
         APD_units = get_separation_units(stream=S401-1, print_progress=False, plot_graph=False)
         new_sys = System.from_units(ID=new_ID, units=[S401]+list(APD_units))
@@ -175,3 +177,8 @@ class BluesTEA():
     
     def cashflow_table(self):
         return self.tea.get_cashflow_table()
+    
+    def save_diagram(self, kind='thorough', filename=None, format_='png'):
+        if not filename:
+            filename = 'flowsheet_'+str(self.system_ID)
+        self.system.diagram(kind=kind, file=filename, format=format_)

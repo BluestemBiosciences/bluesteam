@@ -21,6 +21,7 @@ class BlueStream:
     def __init__(self,composition_dict,
                  products,
                  impurities,
+                 fermentation_feed_glucose_flow,
                  ID=None):
         corn_chems = create_chemicals()
         chems = [c for c in corn_chems]
@@ -47,7 +48,8 @@ class BlueStream:
         
         self.products = products
         self.impurities = impurities
-    
+        self.fermentation_feed_glucose_flow = fermentation_feed_glucose_flow
+        
     def __repr__(self):
         self.stream.show('cmol100')
         return f''

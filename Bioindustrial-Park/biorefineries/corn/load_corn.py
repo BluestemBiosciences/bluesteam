@@ -19,11 +19,16 @@ def load_set_and_get_corn_upstream_sys(ID, bluestream=None, fermentation_tau=Non
     if bluestream:
         tmo.settings.set_thermo(bluestream.stream.chemicals)
     corn.load()
+    
     units = corn.flowsheet.unit
     streams = corn.flowsheet.stream
     V405 = units['V405']
     V307 = units['V307']
     V307.ins[5].disconnect_source()
+    
+    
+    bluestream.stream.F_mol *= V405.ins[0].imol['Glucose']/bluestream.fermentation_feed_glucose_flow # initial scaling for bluestream total flow
+    
     if not aeration_time:
         aeration_time = V405.tau
     V405.aeration_time = aeration_time
@@ -53,6 +58,7 @@ def load_set_and_get_corn_upstream_sys(ID, bluestream=None, fermentation_tau=Non
                                                
     V405.simulate()
     
+    V405.show()
     
     new_sys = System.from_units(ID=ID, units=list(units_till_fermentation)+[V405, V405.outs[1].sink])
     if simulate:
