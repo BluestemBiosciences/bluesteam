@@ -37,14 +37,15 @@ class BluesTEA():
                #                              'Yield':0.8 # %theoretical
                #                              },
                fermentation_residence_time=100., # h
-               fermentation_feed_glucose_concentration=228.57, #g/L
                bluestream=None, # broth output from fermentation, including microbe
                add_storage_units=True,
                add_upstream_impurities_to_bluestream=False,
                ):
         
         self.system_ID = system_ID
+        # self.products = bluestream.products
         self.products = {}
+        self.bluestream = bluestream
         self.system_up_to_fermentation = system_up_to_fermentation =\
             load_set_and_get_corn_upstream_sys(ID=system_ID+'_conversion',
                                                 bluestream=bluestream, 
@@ -96,17 +97,18 @@ class BluesTEA():
             feedstock.F_mass = upstream_feed_capacity * 1000. / 24.
         if upstream_feed_price:
             feedstock.price = upstream_feed_price
+        # print('Simulating\n\n')
         system.simulate()
         
-        for i in range(5):
-            tea.IRR = tea.solve_IRR()
+        # for i in range(5):
+        #     tea.IRR = tea.solve_IRR()
         
     def get_system_from_APD(self, new_ID, simulate=True):
         S401 = SolidsCentrifuge('S401', ins=self.stream_to_separation, 
                                 outs=('S401_solid_waste', 'S401_1'),
                                 solids=['Yeast'], split={'Yeast':1-1e-4})
         S401.simulate()
-        APD_units = get_separation_units(stream=S401-1, print_progress=False, plot_graph=False)
+        APD_units = get_separation_units(stream=S401-1, products=list(self.bluestream.products), print_progress=False, plot_graph=False)
         new_sys = System.from_units(ID=new_ID, units=[S401]+list(APD_units))
         if simulate:
             new_sys.simulate()

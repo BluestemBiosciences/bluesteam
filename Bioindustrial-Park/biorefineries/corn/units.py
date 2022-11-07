@@ -272,7 +272,7 @@ class SimultaneousSaccharificationFermentation(bst.BatchBioreactor):
     
     
     """
-    _N_ins = 5
+    _N_ins = 6
     _N_outs = 2
     
     def __init__(self, ID='', ins=None, outs=(), thermo=None, *, 
@@ -310,7 +310,7 @@ class SimultaneousSaccharificationFermentation(bst.BatchBioreactor):
         aeration_rate = self.aeration_rate
         if self.update_fermentation_performance_based_on_aeration:
             self.growth.X, self.reaction.X = self.get_yields_from_aeration_rate(aeration_rate)
-        feed, yeast, csl, dap, air = self.ins
+        feed, yeast, csl, dap, air, water = self.ins
         self.air = air
         vent, effluent = self.outs
         

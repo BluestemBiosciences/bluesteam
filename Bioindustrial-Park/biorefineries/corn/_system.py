@@ -178,11 +178,12 @@ def create_system(ID='corn_sys', flowsheet=None):
     #     V405._run()
     #     K401.ins[0].mol[:] = K401.outs[0].mol[:]
     #     # K401.show()
-    V405 = u.SSF('V405', (E402-0, P404-0, CSL_ferm, DAP_ferm, H401-0), outs=('CO2', ''), V=1.9e3)
+    V405 = u.SSF('V405', (E402-0, P404-0, CSL_ferm, DAP_ferm, H401-0, 'dilution_water'), outs=('CO2', ''), V=1.9e3)
     @V405.add_specification()
     def V405_spec():
         V405._run()
         K401.ins[0].mol[:] = H401.outs[0].mol[:]
+        V405.ins[5].imol['Water'] = max(0, sum([i.imol['Water'] for i in V405.outs])-sum([i.imol['Water'] for i in V405.ins]))
         try:
             # K401._cost = type(K401)._cost
             K401.simulate()

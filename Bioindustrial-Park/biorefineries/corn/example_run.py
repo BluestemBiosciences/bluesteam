@@ -17,9 +17,9 @@ stream_1 = BlueStream(
         ID='stream_1',
         composition_dict = {
         'Water' : 2500, # Keys: Chemicals; Use CAS IDs where unsure of names # Values: molar flows (kmol/h)
-        'AdipicAcid' : 20,
+        'AdipicAcid' : 2,
         'Yeast': 1,
-        # 'CO2': 457,
+        'CO2': 200,
         },
         products = ['AdipicAcid'],
         impurities = ['Water'],
@@ -32,12 +32,11 @@ tea_1 = BluesTEA(
     system_ID = 'sys1',
                 # system_ID=stream_1.ID+'_sys',
                   bluestream=stream_1,
-                  upstream_feed='corn',
-                 products_and_purities={'AdipicAcid':0.995,}, # {'product ID': purity in weight%}
-                 products_and_market_prices={'AdipicAcid':4.088}, # {'product ID': price in $/pure-kg})
+                  upstream_feed='sucrose',
+                 products_and_purities={'AdipicAcid':0.5,}, # {'product ID': purity in weight%}
+                 products_and_market_prices={'AdipicAcid':1.75}, # {'product ID': price in $/pure-kg})
                  current_equipment=None,
                  fermentation_residence_time=100., # h
-                 fermentation_feed_glucose_concentration=228.57, #g/L # only for sucrose as feedstock
                  aeration_rate=15e-3,
                  )
 
@@ -71,7 +70,6 @@ tea_2 = BluesTEA(
                  products_and_market_prices={'Ethanol':0.85}, # {'product ID': price in $/pure-kg})
                  current_equipment=None,
                  fermentation_residence_time=100., # h
-                 fermentation_feed_glucose_concentration=228.57, #g/L # only for sucrose as feedstock
                  aeration_rate=15e-3,
                  )
 tea_2.set_upstream_feed_capacity(1109.08)
@@ -106,7 +104,6 @@ tea_3 = BluesTEA(
                  products_and_purities={'AdipicAcid':0.995,}, # {'product ID': purity in weight%}
                  products_and_market_prices={'AdipicAcid':4.088}, # {'product ID': price in $/pure-kg})
                  current_equipment=None,
-                 fermentation_feed_glucose_concentration=228.57, #g/L # only for sucrose as feedstock
                  fermentation_residence_time=100., # h
                  aeration_rate=15e-3,
                  )
