@@ -183,7 +183,7 @@ def create_system(ID='corn_sys', flowsheet=None):
     def V405_spec():
         V405._run()
         K401.ins[0].mol[:] = H401.outs[0].mol[:]
-        V405.ins[5].imol['Water'] = max(0, sum([i.imol['Water'] for i in V405.outs])-sum([i.imol['Water'] for i in V405.ins]))
+        # V405.ins[5].imol['Water'] = max(0, sum([i.imol['Water'] for i in V405.outs])-sum([i.imol['Water'] for i in V405.ins]))
         try:
             # K401._cost = type(K401)._cost
             K401.simulate()

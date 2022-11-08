@@ -47,8 +47,8 @@ def load_set_and_get_corn_upstream_sys(ID, bluestream=None, fermentation_tau=Non
     if upstream_feed=='corn':
         if upstream_feed_capacity:
             streams['corn'].F_mass = upstream_feed_capacity
-            bluestream.stream.F_mol *= V405.ins[0].imol['Glucose']/bluestream.fermentation_feed_glucose_flow # initial scaling for bluestream total flow
-      
+        bluestream.stream.F_mol *= V405.ins[0].imol['Glucose']/bluestream.fermentation_feed_glucose_flow # initial scaling for bluestream total flow
+        
     elif upstream_feed=='sucrose':
         sucrose = Stream('sucrose')
         sucrose.imass['Glucose'] = 100.

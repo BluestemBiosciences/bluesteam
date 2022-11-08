@@ -98,19 +98,22 @@ class BluesTEA():
         if upstream_feed_price:
             feedstock.price = upstream_feed_price
         # print('Simulating\n\n')
-        system.simulate()
+        
+        # system.simulate()
         
         # for i in range(5):
         #     tea.IRR = tea.solve_IRR()
         
-    def get_system_from_APD(self, new_ID, simulate=True):
+        fermentation_reactor.simulate()
+        
+    def get_system_from_APD(self, new_ID, resimulate=False):
         S401 = SolidsCentrifuge('S401', ins=self.stream_to_separation, 
                                 outs=('S401_solid_waste', 'S401_1'),
                                 solids=['Yeast'], split={'Yeast':1-1e-4})
         S401.simulate()
         APD_units = get_separation_units(stream=S401-1, products=list(self.bluestream.products), print_progress=False, plot_graph=False)
         new_sys = System.from_units(ID=new_ID, units=[S401]+list(APD_units))
-        if simulate:
+        if resimulate:
             new_sys.simulate()
         return new_sys
     
@@ -118,7 +121,8 @@ class BluesTEA():
         
         new_sys = System.from_units(ID=new_ID, units=list(sys1.units)+list(sys2.units)+list(self.storage_units))
         if simulate:
-            new_sys.simulate()
+            # new_sys.simulate()
+            pass
         return new_sys
     
     def save_report(self, filename):

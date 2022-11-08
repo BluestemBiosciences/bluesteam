@@ -336,7 +336,8 @@ class SimultaneousSaccharificationFermentation(bst.BatchBioreactor):
         
         else:
             effluent.copy_like(self.broth_to_load)
-        
+            self.ins[5].imol['Water'] = max(0, sum([i.imol['Water'] for i in self.outs])-sum([i.imol['Water'] for i in self.ins]))
+            
         vent.empty()
         vent.receive_vent(effluent)
         
