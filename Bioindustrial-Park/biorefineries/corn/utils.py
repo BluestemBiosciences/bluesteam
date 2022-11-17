@@ -14,7 +14,7 @@ from thermosteam import Chemical, Stream
 from biorefineries.corn._chemicals import create_chemicals
 set_thermo = tmo.settings.set_thermo
 
-__all__ = ('BlueStream', 'dextrose_equivalent',)
+__all__ = ('BlueStream', 'dextrose_equivalent', 'has_required_properties')
 
 
 class BlueStream:
