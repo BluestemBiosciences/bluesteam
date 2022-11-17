@@ -6,8 +6,22 @@ Created on Thu Oct 13 11:40:50 2022
 """
 from biorefineries import corn
 from biorefineries.corn._bluestea import BluesTEA
-from biorefineries.corn.utils import BlueStream
+from biorefineries.corn.utils import BlueStream, has_required_properties
 import thermosteam as tmo
+
+#%% Some exmamples calls for has_required_properties
+MPO = tmo.Chemical(ID='2_methyl_1_propanol', search_ID='2-methyl-1-propanol')
+print(has_required_properties(MPO))
+
+print(has_required_properties('lactic acid'))
+
+print(has_required_properties('LacticAcid'))
+
+print(has_required_properties('Water'))
+
+print(has_required_properties('Cysteine'))
+
+print(has_required_properties('PhosphopyruvicAcid'))
 
 #%% AdipicAcid with AceticAcid as an impurity
 

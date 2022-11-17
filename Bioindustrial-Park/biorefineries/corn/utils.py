@@ -53,8 +53,25 @@ class BlueStream:
     def __repr__(self):
         self.stream.show('cmol100')
         return f''
-    
-    
+  
+
+def has_required_properties(chemical, required_properties=['Tb', 'Vl', 'Vg', 'Psat']):
+    if type(chemical) == str:
+        chemical = Chemical(chemical)
+    missing_properties = chemical.get_missing_properties()
+    for p in missing_properties:
+        if p in required_properties:
+            return False
+    if 'V' in missing_properties:
+        if 'Vs' in required_properties and not chemical.V.s.method:
+            return False
+        elif 'Vl' in required_properties and not chemical.V.l.method:
+            return False
+        elif 'Vg' in required_properties and not chemical.V.g.method:
+            return False
+    return True
+
+#%%
 def dextrose_equivalent(n):
     """
     Return the dextrose equivalent of starch given the degree of polymerization.
