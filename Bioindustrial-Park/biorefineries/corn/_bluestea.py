@@ -8,7 +8,9 @@ from biorefineries.corn._tea import create_tea
 from biorefineries.corn.load_corn import load_set_and_get_corn_upstream_sys
 from biosteam import System, SolidsCentrifuge, StorageTank, report
 from apd.apd_utils import get_separation_units
+from apd.solvents_barrage import solvent_IDs
 
+solvent_prices = {solvent: 5. for solvent in solvent_IDs} # solvent price defaults to $5/kg
 __all__=['BluesTEA',]
 
 class BluesTEA():
@@ -40,12 +42,14 @@ class BluesTEA():
                bluestream=None, # broth output from fermentation, including microbe
                add_storage_units=True,
                add_upstream_impurities_to_bluestream=False,
+               solvent_prices=solvent_prices # format is {ID: price in $/kg}
                ):
         
         self.system_ID = system_ID
         # self.products = bluestream.products
         self.products = {}
         self.bluestream = bluestream
+        self.solvent_prices = solvent_prices
         self.system_up_to_fermentation = system_up_to_fermentation =\
             load_set_and_get_corn_upstream_sys(ID=system_ID+'_conversion',
                                                 bluestream=bluestream, 
@@ -104,14 +108,16 @@ class BluesTEA():
         # for i in range(5):
         #     tea.IRR = tea.solve_IRR()
         
-        fermentation_reactor.simulate()
+        self.fermentation_reactor.simulate()
+        # fermentation_reactor.simulate()
         
     def get_system_from_APD(self, new_ID, resimulate=False):
         S401 = SolidsCentrifuge('S401', ins=self.stream_to_separation, 
                                 outs=('S401_solid_waste', 'S401_1'),
                                 solids=['Yeast'], split={'Yeast':1-1e-4})
         S401.simulate()
-        APD_units = get_separation_units(stream=S401-1, products=list(self.bluestream.products), print_progress=False, plot_graph=False)
+        APD_units = get_separation_units(stream=S401-1, products=list(self.bluestream.products), print_progress=False, plot_graph=False,
+                                         solvent_prices=self.solvent_prices)
         new_sys = System.from_units(ID=new_ID, units=[S401]+list(APD_units))
         if resimulate:
             new_sys.simulate()

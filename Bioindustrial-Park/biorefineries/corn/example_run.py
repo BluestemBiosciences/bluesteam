@@ -12,18 +12,20 @@ import thermosteam as tmo
 #%% AdipicAcid with AceticAcid as an impurity
 
 corn.load()
-
+MPO = tmo.Chemical(ID='2_methyl_1_propanol', search_ID='2-methyl-1-propanol')
 stream_1 = BlueStream(
         ID='stream_1',
         composition_dict = {
-        'Water' : 2500, # Keys: Chemicals; Use CAS IDs where unsure of names # Values: molar flows (kmol/h)
-        'AdipicAcid' : 2,
-        'AceticAcid':1.,
+        'Water' : 3200, # Keys: Chemicals; Use CAS IDs where unsure of names # Values: molar flows (kmol/h)
+        'AdipicAcid' : 90,
+        MPO:1.,
         'Yeast': 1,
         'CO2': 200,
         },
         products = ['AdipicAcid'],
-        impurities = ['Water', 'AceticAcid'],
+        impurities = ['Water', 
+                       MPO.ID,
+                      ],
         fermentation_feed_glucose_flow = 40, #kmol/h # note: for corn, we get about 0.1567990 kmol-glucose/h per wet-metric-tonne-corn/d or about 0.677959 kg-glucose per wet-kg-corn; note also that the moisture content of corn is 85 wt%
         )
 
@@ -41,7 +43,7 @@ tea_1 = BluesTEA(
                  aeration_rate=15e-3,
                  )
 
-tea_1.set_upstream_feed_capacity(1109.08) # a way to update the upstream feed capacity such that the bluestream total flow is automatically updated
+# tea_1.set_upstream_feed_capacity(1109.08) # a way to update the upstream feed capacity such that the bluestream total flow is automatically updated
 # note: for corn, we get about 0.1567990 kmol-glucose/h per wet-metric-tonne-corn/d or about 0.677959 kg-glucose per wet-kg-corn; note also that the moisture content of corn is 85 wt%
 
 #%% Ethanol with formic acid as an impurity
@@ -58,7 +60,7 @@ stream_2 = BlueStream(
         # 'CO2': 457,
         },
         products = ['Ethanol'],
-        impurities = ['Water'],
+        impurities = ['Water', 'FormicAcid'],
         fermentation_feed_glucose_flow = 40,
         )
 
@@ -74,7 +76,7 @@ tea_2 = BluesTEA(
                  fermentation_residence_time=100., # h
                  aeration_rate=15e-3,
                  )
-tea_2.set_upstream_feed_capacity(1109.08)
+# tea_2.set_upstream_feed_capacity(1109.08)
 # note: for corn, we get about 0.1567990 kmol-glucose/h per wet-metric-tonne-corn/d or about 0.677959 kg-glucose per wet-kg-corn; note also that the moisture content of corn is 85 wt%
 
 #%% Ethanol with 2-methyl-1-propanol as an impurity
@@ -110,6 +112,82 @@ tea_3 = BluesTEA(
                  aeration_rate=15e-3,
                  )
 
-tea_3.set_upstream_feed_capacity(1109.08) # a way to update the upstream feed capacity such that the bluestream total flow is automatically updated
+# tea_3.set_upstream_feed_capacity(1109.08) # a way to update the upstream feed capacity such that the bluestream total flow is automatically updated
 
 
+#%% 3-HP
+
+corn.load()
+LacticAcid = tmo.Chemical('LacticAcid')
+HP = tmo.Chemical(ID='HP', search_ID='3-hydroxypropionic acid')
+HP.copy_models_from(LacticAcid, names = ['V', 'Hvap', 'Psat', 'mu', 'kappa'])
+HP.Tm = 15 + 273.15 # CAS says < 25 C
+HP.Tb = 179.75 + 273.15 # CAS
+HP.Hf = LacticAcid.Hf
+stream_3 = BlueStream(
+        ID='stream_1',
+        composition_dict = {
+        "water": 6327.836228915082,
+        HP: 508.28819656562774,
+        'AceticAcid': 20.,
+        "Yeast": 20,
+        },
+        products = [HP.ID],
+        impurities = ['Water', 'AceticAcid'],
+        fermentation_feed_glucose_flow = 84.11395309250501, #kmol/h
+        )
+
+
+
+tea_3 = BluesTEA(
+    system_ID = 'sys1',
+                # system_ID=stream_1.ID+'_sys',
+                  bluestream=stream_3,
+                  upstream_feed='sucrose',
+                 products_and_purities={HP.ID:0.995,}, # {'product ID': purity in weight%}
+                 products_and_market_prices={HP.ID:0.85}, # {'product ID': price in $/pure-kg})
+                 current_equipment=None,
+                 fermentation_residence_time=100., # h
+                 aeration_rate=15e-3,
+                 )
+
+# tea_3.set_upstream_feed_capacity(1109.08) # a way to update the upstream feed capacity such that the bluestream total flow is automatically updated
+
+
+#%% azepan-2-one
+corn.load()
+azepan_2_one = tmo.Chemical(ID='azepan_2_one', search_ID='Azepan-2-one')
+MPO = tmo.Chemical(ID='2_methyl_1_propanol', search_ID='2-methyl-1-propanol')
+stream_3 = BlueStream(
+        ID='stream_1',
+        composition_dict = {
+        "water": 5258.496724319642,
+        azepan_2_one: 150.92249528794758,
+        "Yeast": 20,
+        MPO: 37.71691038299015,
+        "Ethanol": 55.50053134077253,
+        # "PyrophosphoricAcid": 150.86764153196046,
+        "CO2": 357.23581440469405,
+        },
+        products = [azepan_2_one.ID],
+        impurities = ['Water', MPO.ID, 'Ethanol', 
+                      # 'PyrophosphoricAcid',
+                      ],
+        fermentation_feed_glucose_flow = 84.11395309250501, #kmol/h
+        )
+
+
+
+tea_3 = BluesTEA(
+    system_ID = 'sys1',
+                # system_ID=stream_1.ID+'_sys',
+                  bluestream=stream_3,
+                  upstream_feed='sucrose',
+                 products_and_purities={azepan_2_one.ID:0.995,}, # {'product ID': purity in weight%}
+                 products_and_market_prices={azepan_2_one.ID:0.85}, # {'product ID': price in $/pure-kg})
+                 current_equipment=None,
+                 fermentation_residence_time=100., # h
+                 aeration_rate=15e-3,
+                 )
+
+# tea_3.set_upstream_feed_capacity(1109.08) # a way to update the upstream feed capacity such that the bluestream total flow is automatically updated
