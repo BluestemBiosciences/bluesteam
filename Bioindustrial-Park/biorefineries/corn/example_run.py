@@ -138,6 +138,7 @@ HP.copy_models_from(LacticAcid, names = ['V', 'Hvap', 'Psat', 'mu', 'kappa'])
 HP.Tm = 15 + 273.15 # CAS says < 25 C
 HP.Tb = 179.75 + 273.15 # CAS
 HP.Hf = LacticAcid.Hf
+HP.copy_models_from(tmo.Chemical('Water'), ['sigma'])
 stream_3 = BlueStream(
         ID='stream_1',
         composition_dict = {
@@ -205,3 +206,72 @@ tea_3 = BluesTEA(
                  )
 
 # tea_3.set_upstream_feed_capacity(1109.08) # a way to update the upstream feed capacity such that the bluestream total flow is automatically updated
+
+#%% AdipicAcid
+
+
+corn.load()
+stream_1 = BlueStream(
+        ID='stream_1',
+        composition_dict = {
+        "water": 6651.450347887181,
+        "AdipicAcid": 234.59455226106215,
+        "Yeast": 20,
+        "CO2": 117.2546436776835
+        },
+        products = ['AdipicAcid'],
+        impurities = ['Water', 
+                      ],
+        fermentation_feed_glucose_flow = 84.11395309250501, #kmol/h # note: for corn, we get about 0.1567990 kmol-glucose/h per wet-metric-tonne-corn/d or about 0.677959 kg-glucose per wet-kg-corn; note also that the moisture content of corn is 85 wt%
+        )
+
+# stream_1.stream.F_mass *= 127101/17874 # temporary fix
+
+tea_1 = BluesTEA(
+    system_ID = 'sys1',
+                # system_ID=stream_1.ID+'_sys',
+                  bluestream=stream_1,
+                  upstream_feed='corn',
+                 products_and_purities={'AdipicAcid':0.5,}, # {'product ID': purity in weight%}
+                 products_and_market_prices={'AdipicAcid':1.75}, # {'product ID': price in $/pure-kg})
+                 current_equipment=None,
+                 fermentation_residence_time=100., # h
+                 aeration_rate=15e-3,
+                 )
+
+#%%
+LacticAcid = tmo.Chemical('LacticAcid')
+HP = tmo.Chemical(ID='HP', search_ID='3-hydroxypropionic acid')
+HP.copy_models_from(LacticAcid, names = ['V', 'Hvap', 'Psat', 'mu', 'kappa'])
+HP.Tm = 15 + 273.15 # CAS says < 25 C
+HP.Tb = 179.75 + 273.15 # CAS
+HP.Hf = LacticAcid.Hf
+# HP.copy_models_from(tmo.Chemical('Water'), ['sigma'])
+
+corn.load()
+stream_1 = BlueStream(
+        ID='stream_1',
+        composition_dict = {
+        "water": 6327.836228915082,
+        HP: 508.28819656562774,
+         "Yeast": 20
+        },
+        products = [HP.ID],
+        impurities = ['Water', 
+                      ],
+        fermentation_feed_glucose_flow = 84.11395309250501, #kmol/h # note: for corn, we get about 0.1567990 kmol-glucose/h per wet-metric-tonne-corn/d or about 0.677959 kg-glucose per wet-kg-corn; note also that the moisture content of corn is 85 wt%
+        )
+
+# stream_1.stream.F_mass *= 127101/17874 # temporary fix
+
+tea_1 = BluesTEA(
+    system_ID = 'sys1',
+                # system_ID=stream_1.ID+'_sys',
+                  bluestream=stream_1,
+                  upstream_feed='corn',
+                 products_and_purities={HP.ID:0.9,}, # {'product ID': purity in weight%}
+                 products_and_market_prices={HP.ID:1.75}, # {'product ID': price in $/pure-kg})
+                 current_equipment=None,
+                 fermentation_residence_time=100., # h
+                 aeration_rate=15e-3,
+                 )

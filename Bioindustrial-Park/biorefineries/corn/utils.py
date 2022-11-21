@@ -31,11 +31,20 @@ class BlueStream:
         for k in composition_dict.keys():
             if type(k)==str:
                 try:
-                    chems.append(corn_chems[k])
+                    chem_k = corn_chems[k]
+                    if not chem_k.sigma.method:
+                        chem_k.copy_models_from(tmo.Chemical('Water'), ['sigma'])
+                    chems.append(chem_k)
                 except:
-                    chems.append(Chemical(k))
+                    chem_k = Chemical(k)
+                    if not chem_k.sigma.method:
+                        chem_k.copy_models_from(tmo.Chemical('Water'), ['sigma'])
+                    chems.append(chem_k)
             else:
-                chems.append(k)
+                chem_k = k
+                if not chem_k.sigma.method:
+                    chem_k.copy_models_from(tmo.Chemical('Water'), ['sigma'])
+                chems.append(chem_k)
         set_thermo(chems)
         
         self.ID = ID
