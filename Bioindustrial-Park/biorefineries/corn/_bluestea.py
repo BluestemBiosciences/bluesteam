@@ -7,8 +7,8 @@ Created on Thu Oct 13 11:38:02 2022
 from biorefineries.corn._tea import create_tea
 from biorefineries.corn.load_corn import load_set_and_get_corn_upstream_sys
 from biosteam import System, SolidsCentrifuge, StorageTank, report
-from apd.apd_utils import get_separation_units
-from apd.solvents_barrage import solvent_IDs
+from autosynthesis.utils import get_separation_units
+from autosynthesis.solvents_barrage import solvent_IDs
 
 solvent_prices = {solvent: 5. for solvent in solvent_IDs} # solvent price defaults to $5/kg
 __all__=['BluesTEA',]
