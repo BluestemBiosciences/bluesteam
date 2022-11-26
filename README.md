@@ -4,4 +4,4 @@ Currently contains modules from Bioindustrial-Park; these will be removed prior 
 
 Requires:
 biorefineries==2.23.18
-autosynthesis==0.0.6
+autosynthesis==0.0.7
