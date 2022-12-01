@@ -196,3 +196,7 @@ class BluesTEA():
         if not filename:
             filename = 'flowsheet_'+str(self.system_ID)
         self.system.diagram(kind=kind, file=filename, format=format_)
+    
+    def sep_sys_unit_result_tables(self):
+        return report.unit_result_tables([self.separation_system.units[0]]) + report.unit_result_tables(self.separation_system.units)
+    
