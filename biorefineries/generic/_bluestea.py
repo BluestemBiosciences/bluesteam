@@ -9,6 +9,8 @@ from bluesteam.biorefineries.generic.load_generic import load_set_and_get_upstre
 from biosteam import System, SolidsCentrifuge, StorageTank, report
 from autosynthesis.utils import get_separation_units
 from autosynthesis.solvents_barrage import solvent_IDs
+import os
+
 
 solvent_prices = {solvent: 5. for solvent in solvent_IDs} # solvent price defaults to $5/kg
 __all__=['BluesTEA',]
@@ -197,6 +199,17 @@ class BluesTEA():
             filename = 'flowsheet_'+str(self.system_ID)
         self.system.diagram(kind=kind, file=filename, format=format_)
     
+    def get_diagram_bytearray(self, kind='thorough', filename=None, format_='png'):
+        if not filename:
+            filename='temp_flowsheet_'+str(self.system_ID)
+        self.save_diagram(kind, filename, format_)
+        b = None
+        with open(filename+"."+format_, "rb") as image:
+          f = image.read()
+          b = bytearray(f)
+        os.remove(filename+"."+format_)
+        return b
+
     def sep_sys_unit_result_tables(self):
         return report.unit_result_tables([self.separation_system.units[0]]) + report.unit_result_tables(self.separation_system.units)
     
