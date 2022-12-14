@@ -89,7 +89,7 @@ class BluesTEA():
                    labor_cost=labor_cost, fringe_benefits=fringe_benefits,
                    property_tax=property_tax, property_insurance=property_insurance,
                    supplies=supplies, maintenance=maintenance, administration=administration)
-        
+        tea.finance_years, tea.finance_interest = 1, 1e-5
         self.upstream_feed = upstream_feed
         self.upstream_feed_price = upstream_feed_price
         
@@ -213,3 +213,18 @@ class BluesTEA():
     def sep_sys_unit_result_tables(self):
         return report.unit_result_tables([self.separation_system.units[0]]) + report.unit_result_tables(self.separation_system.units)
     
+    def set_financing_payoff_years(self, payoff_years): # integer
+        self.tea.finance_years = payoff_years
+    
+    def set_financing_interest_rate(self, interest_rate): # fraction
+        self.tea.finance_interest = interest_rate
+        
+    def add_financing(self, amount=0., unit_fraction_dict={}): # provide an amount of funding to be added at project start 
+    # and/or a dictionary with keys as IDs of units of which the installed cost is to to be discounted 
+    # and values as discount fraction 
+        tea = self.tea
+        FCI = tea.FCI
+        tea.finance_fraction += amount/FCI
+        for unit_ID, fraction in unit_fraction_dict.items():
+            tea.finance_fraction += fraction*self.flowsheet(unit_ID).installed_cost/FCI
+        
