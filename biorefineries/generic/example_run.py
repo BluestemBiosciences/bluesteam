@@ -25,7 +25,7 @@ print(has_required_properties('PhosphopyruvicAcid'))
 
 #%% AdipicAcid with Ethanol as an impurity
 
-# MPO = tmo.Chemical(ID='2_methyl_1_propanol', search_ID='2-methyl-1-propanol')
+MPO = tmo.Chemical(ID='2_methyl_1_propanol', search_ID='2-methyl-1-propanol')
 stream_1 = BlueStream(
         ID='stream_1',
         composition_dict = {
