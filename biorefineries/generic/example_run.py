@@ -34,11 +34,15 @@ stream_1 = BlueStream(
         'Ethanol':120.,
         'Yeast': 1,
         'CO2': 200,
+        "LacticAcid": 17.884760112870275/2,
+        "AceticAcid": 10.791860228730412/2,
+        # "MPO": 86.31073179134295/2,
         },
         products = ['AdipicAcid',],
         impurities = ['Water', 
-                      'Ethanol',
-                       # MPO.ID,
+                      'AceticAcid',
+                      'LacticAcid',
+                        MPO.ID,
                       ],
         fermentation_feed_glucose_flow = 40, #kmol/h # note: for corn, we get about 0.1567990 kmol-glucose/h per wet-metric-tonne-corn/d or about 0.677959 kg-glucose per wet-kg-corn; note also that the moisture content of corn is 85 wt%
         )
@@ -49,8 +53,8 @@ tea_1 = BluesTEA(
                   bluestream=stream_1,
                   upstream_feed='corn',
                   upstream_feed_capacity=1000,
-                 products_and_purities={'AdipicAcid':0.99, 'Ethanol':0.99}, # {'product ID': purity in weight%}
-                 products_and_market_prices={'AdipicAcid':1.75, 'Ethanol':0.85}, # {'product ID': price in $/pure-kg})
+                 products_and_purities={'AdipicAcid':0.5}, # {'product ID': purity in weight%}
+                 products_and_market_prices={'AdipicAcid':1.75}, # {'product ID': price in $/pure-kg})
                  current_equipment=None,
                  fermentation_residence_time=100., # h
                  aeration_rate=15e-3,
@@ -291,6 +295,7 @@ tea_1 = BluesTEA(
                  fermentation_residence_time=100., # h
                  aeration_rate=15e-3,
                  )
+
 #%%
 LacticAcid = tmo.Chemical('LacticAcid')
 HP = tmo.Chemical(ID='HP', search_ID='3-hydroxypropionic acid')
@@ -323,44 +328,6 @@ tea_1 = BluesTEA(
                   upstream_feed_capacity=1000,
                  products_and_purities={HP.ID:0.9,}, # {'product ID': purity in weight%}
                  products_and_market_prices={HP.ID:1.75}, # {'product ID': price in $/pure-kg})
-                 current_equipment=None,
-                 fermentation_residence_time=100., # h
-                 aeration_rate=15e-3,
-                 )
-
-#%%
-LacticAcid = tmo.Chemical('LacticAcid')
-HP = tmo.Chemical(ID='HP', search_ID='3-hydroxypropionic acid')
-HP.copy_models_from(LacticAcid, names = ['V', 'Hvap', 'Psat', 'mu', 'kappa'])
-HP.Tm = 15 + 273.15 # CAS says < 25 C
-HP.Tb = 179.75 + 273.15 # CAS
-HP.Hf = LacticAcid.Hf
-HP.Pc = LacticAcid.Pc
-# HP.copy_models_from(tmo.Chemical('Water'), ['sigma'])
-
-generic.load()
-stream_1 = BlueStream(
-        ID='stream_1',
-        composition_dict = {
-        "water": 4178.758376169724,
-        "AcrylicAcid": 245.24905484291463,
-        "Yeast": 20,
-        # "LacticAcid": 262.94353844721786
-        },
-        products = ['AcrylicAcid'],
-        impurities = ['Water', 
-                      ],
-        fermentation_feed_glucose_flow = 84.11395309250501, #kmol/h # note: for corn, we get about 0.1567990 kmol-glucose/h per wet-metric-tonne-corn/d or about 0.677959 kg-glucose per wet-kg-corn; note also that the moisture content of corn is 85 wt%
-        )
-
-tea_1 = BluesTEA(
-    system_ID = 'sys1',
-                # system_ID=stream_1.ID+'_sys',
-                  bluestream=stream_1,
-                  upstream_feed='corn',
-                  upstream_feed_capacity=1000,
-                 products_and_purities={'AcrylicAcid':0.9,}, # {'product ID': purity in weight%}
-                 products_and_market_prices={'AcrylicAcid':1.75}, # {'product ID': price in $/pure-kg})
                  current_equipment=None,
                  fermentation_residence_time=100., # h
                  aeration_rate=15e-3,

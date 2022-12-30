@@ -11,8 +11,8 @@ from bluesteam.biorefineries.generic.utils import BlueStream, has_required_prope
 import thermosteam as tmo
 
 #%%
-import os
-os.environ['NUMBA_DISABLE_JIT'] = '1'
+# import os
+# os.environ['NUMBA_DISABLE_JIT'] = '1'
 
 #%% Example_1
 MPO = tmo.Chemical(ID='MPO', search_ID='2-methyl-1-propanol')
@@ -24,7 +24,7 @@ stream_1 = BlueStream(
         "Yeast": 20,
         "LacticAcid": 17.884760112870275,
         "AceticAcid": 10.791860228730412,
-        "MPO": 86.31073179134295,
+        MPO: 86.31073179134295,
         "CO2": 250.04038489513735
         },
         products = ['AdipicAcid',],
@@ -41,9 +41,9 @@ tea_1 = BluesTEA(
     system_ID = 'sys1',
                 # system_ID=stream_1.ID+'_sys',
                   bluestream=stream_1,
-                  upstream_feed='sucrose',
+                  upstream_feed='corn',
                   upstream_feed_capacity=1000,
-                 products_and_purities={'AdipicAcid':0.999}, # {'product ID': purity in weight%}
+                 products_and_purities={'AdipicAcid':0.99}, # {'product ID': purity in weight%}
                  products_and_market_prices={'AdipicAcid':1.75}, # {'product ID': price in $/pure-kg})
                  current_equipment=None,
                  fermentation_residence_time=100., # h
@@ -63,7 +63,7 @@ stream_2 = BlueStream(
         ID='stream_2',
         composition_dict = {
         "water": 6331.54716019406,
-       "HP": 496.4281386457651,
+       HP: 496.4281386457651,
        "Yeast": 20,
        "LacticAcid": 17.884760112870275,
        "AceticAcid": 10.791860228730412,
@@ -88,7 +88,7 @@ tea_2 = BluesTEA(
                   bluestream=stream_2,
                   upstream_feed='sucrose',
                   upstream_feed_capacity=1000,
-                 products_and_purities={'HP':0.999}, # {'product ID': purity in weight%}
+                 products_and_purities={'HP':0.99}, # {'product ID': purity in weight%}
                  products_and_market_prices={'HP':1.75}, # {'product ID': price in $/pure-kg})
                  current_equipment=None,
                  fermentation_residence_time=100., # h
@@ -108,7 +108,7 @@ stream_3 = BlueStream(
         ID='stream_3',
         composition_dict = {
         "water": 6331.54716019406,
-       "HP": 508.28819656562774,
+       HP: 508.28819656562774,
        "Yeast": 20,
        "LacticAcid": 17.884760112870275,
        "AceticAcid": 10.791860228730412,
@@ -129,7 +129,7 @@ tea_3 = BluesTEA(
                   bluestream=stream_3,
                   upstream_feed='sucrose',
                   upstream_feed_capacity=1000,
-                 products_and_purities={'HP':0.999}, # {'product ID': purity in weight%}
+                 products_and_purities={'HP':0.99}, # {'product ID': purity in weight%}
                  products_and_market_prices={'HP':1.75}, # {'product ID': price in $/pure-kg})
                  current_equipment=None,
                  fermentation_residence_time=100., # h
@@ -143,7 +143,7 @@ stream_4 = BlueStream(
         ID='stream_4',
         composition_dict = {
         "water": 6807.791760751999,
-        "APO": 203.31527862625188,
+        APO: 203.31527862625188,
         "Yeast": 20,
         "LacticAcid": 17.884760112870275,
         "AceticAcid": 10.791860228730412,
@@ -165,7 +165,7 @@ tea_4 = BluesTEA(
                   bluestream=stream_4,
                   upstream_feed='sucrose',
                   upstream_feed_capacity=1000,
-                 products_and_purities={'APO':0.999}, # {'product ID': purity in weight%}
+                 products_and_purities={'APO':0.99}, # {'product ID': purity in weight%}
                  products_and_market_prices={'APO':1.75}, # {'product ID': price in $/pure-kg})
                  current_equipment=None,
                  fermentation_residence_time=100., # h
@@ -179,7 +179,7 @@ stream_5 = BlueStream(
         ID='stream_5',
         composition_dict = {
         "water": 6554.027140435833,
-        "Butanol": 254.14409828281325,
+        Butanol: 254.14409828281325,
         "Yeast": 20,
         "LacticAcid": 17.884760112870275,
         "AceticAcid": 10.791860228730412,
@@ -201,7 +201,7 @@ tea_5 = BluesTEA(
                   bluestream=stream_5,
                   upstream_feed='sucrose',
                   upstream_feed_capacity=1000,
-                 products_and_purities={'Butanol':0.999}, # {'product ID': purity in weight%}
+                 products_and_purities={'Butanol':0.99}, # {'product ID': purity in weight%}
                  products_and_market_prices={'Butanol':1.75}, # {'product ID': price in $/pure-kg})
                  current_equipment=None,
                  fermentation_residence_time=100., # h
@@ -215,7 +215,7 @@ stream_6 = BlueStream(
         ID='stream_6',
         composition_dict = {
         "water": 6437.895913598838,
-        "BDO": 277.2481072176166,
+        BDO: 277.2481072176166,
         "Yeast": 20,
         "LacticAcid": 17.884760112870275,
         "AceticAcid": 10.791860228730412,
@@ -237,7 +237,7 @@ tea_6 = BluesTEA(
                   bluestream=stream_6,
                   upstream_feed='sucrose',
                   upstream_feed_capacity=1000,
-                 products_and_purities={'BDO':0.999}, # {'product ID': purity in weight%}
+                 products_and_purities={'BDO':0.99}, # {'product ID': purity in weight%}
                  products_and_market_prices={'BDO':1.75}, # {'product ID': price in $/pure-kg})
                  current_equipment=None,
                  fermentation_residence_time=100., # h
@@ -251,7 +251,7 @@ stream_7 = BlueStream(
         ID='stream_7',
         composition_dict = {
         "water": 6437.895913598838,
-        "BDO": 277.2481072176166,
+        BDO: 277.2481072176166,
         "Yeast": 20,
         "CO2": 415.72100940270406
         },
@@ -269,7 +269,7 @@ tea_7 = BluesTEA(
                   bluestream=stream_7,
                   upstream_feed='sucrose',
                   upstream_feed_capacity=1000,
-                 products_and_purities={'BDO':0.999}, # {'product ID': purity in weight%}
+                 products_and_purities={'BDO':0.99}, # {'product ID': purity in weight%}
                  products_and_market_prices={'BDO':1.75}, # {'product ID': price in $/pure-kg})
                  current_equipment=None,
                  fermentation_residence_time=100., # h
@@ -277,20 +277,20 @@ tea_7 = BluesTEA(
                  )
 
 #%% Example_8
-BD_1_4_O = tmo.Chemical(ID='BD_1_4_O', search_ID='1,4-Butanediol')
+BDO = tmo.Chemical(ID='BDO', search_ID='1,4-Butanediol')
 
 stream_8 = BlueStream(
         ID='stream_8',
         composition_dict = {
        "water": 6468.800723734534,
-        "BD_1_4_O": 245.24905484291597,
+       BDO: 245.24905484291597,
         "Yeast": 20,
         "LacticAcid": 17.884760112870275,
         "AceticAcid": 10.791860228730412,
         "IsoamylAcetate": 18.519033854532868,
         "CO2": 414.03746087047836
         },
-        products = ['BD_1_4_O',],
+        products = ['BDO',],
         impurities = [
             "water",
             'LacticAcid',
@@ -307,7 +307,7 @@ tea_8 = BluesTEA(
                   bluestream=stream_8,
                   upstream_feed='sucrose',
                   upstream_feed_capacity=1000,
-                 products_and_purities={'BDO':0.999}, # {'product ID': purity in weight%}
+                 products_and_purities={'BDO':0.99}, # {'product ID': purity in weight%}
                  products_and_market_prices={'BDO':1.75}, # {'product ID': price in $/pure-kg})
                  current_equipment=None,
                  fermentation_residence_time=100., # h
