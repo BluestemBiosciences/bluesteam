@@ -9,6 +9,7 @@ from bluesteam.biorefineries.generic.load_generic import load_set_and_get_upstre
 from biosteam import System, SolidsCentrifuge, StorageTank, report
 from autosynthesis.utils import get_separation_units
 from autosynthesis.solvents_barrage import solvent_IDs
+import os
 
 solvent_prices = {solvent: 5. for solvent in solvent_IDs} # solvent price defaults to $5/kg
 __all__=['BluesTEA',]
@@ -111,6 +112,11 @@ class BluesTEA():
         #     tea.IRR = tea.solve_IRR()
         
         self.fermentation_reactor.simulate()
+        
+        self.sys_ferm_sep_storage_only = sys_ferm_sep_storage_only=\
+            System.from_units(ID='sys_ferm_sep_storage_only', 
+                              units=list([fermentation_reactor, fermentation_reactor.outs[1].sink])+list(separation_system.units)+list(self.storage_units))
+        
         # fermentation_reactor.simulate()
         
     def get_system_from_APD(self, new_ID, resimulate=False):
@@ -192,11 +198,42 @@ class BluesTEA():
     def cashflow_table(self):
         return self.tea.get_cashflow_table()
     
-    def save_diagram(self, kind='thorough', filename=None, format_='png'):
+    def save_diagram(self, kind='thorough', system='full', filename=None, format_='png'):
         if not filename:
             filename = 'flowsheet_'+str(self.system_ID)
-        self.system.diagram(kind=kind, file=filename, format=format_)
+        diag_sys = None
+        if system=='full':
+            diag_sys = self.system
+        elif system=='ferm_sep_storage_only':
+            diag_sys = self.sys_ferm_sep_storage_only
+        
+        diag_sys.diagram(kind=kind, file=filename, format=format_)
+        
+    def get_diagram_bytearray(self, kind='thorough', system='ferm_sep_storage_only', filename=None, format_='png'):
+        if not filename:
+            filename='temp_flowsheet_'+str(self.system_ID)
+        self.save_diagram(kind, system, filename, format_)
+        b = None
+        with open(filename+"."+format_, "rb") as image:
+          f = image.read()
+          b = bytearray(f)
+        os.remove(filename+"."+format_)
+        return b
     
     def sep_sys_unit_result_tables(self):
         return report.unit_result_tables([self.separation_system.units[0]]) + report.unit_result_tables(self.separation_system.units)
     
+    def set_financing_payoff_years(self, payoff_years): # integer
+        self.tea.finance_years = payoff_years
+    
+    def set_financing_interest_rate(self, interest_rate): # fraction
+        self.tea.finance_interest = interest_rate
+        
+    def add_financing(self, amount=0., unit_fraction_dict={}): # provide an amount of funding to be added at project start 
+    # and/or a dictionary with keys as IDs of units of which the installed cost is to to be discounted 
+    # and values as discount fraction 
+        tea = self.tea
+        FCI = tea.FCI
+        tea.finance_fraction += amount/FCI
+        for unit_ID, fraction in unit_fraction_dict.items():
+            tea.finance_fraction += fraction*self.flowsheet(unit_ID).installed_cost/FCI
