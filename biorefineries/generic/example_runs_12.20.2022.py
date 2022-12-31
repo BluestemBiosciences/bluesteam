@@ -50,6 +50,42 @@ tea_1 = BluesTEA(
                  aeration_rate=15e-3,
                  )
 
+#%% Simulated differential solubilities of organic acids in the flashed broth for Example_1
+
+s1 = tea_1.flowsheet.unit.S401_1_crystallizer.ins[0].copy()
+print('\nStream entering the crystallizer:')
+s1.show('cwt100')
+
+print('\nStream after chilling to 3.67 degC and performing solid-liquid equilibrium:')
+s1.T= 3.67 + 273.15
+for solute in ['AdipicAcid', 'AceticAcid', 'LacticAcid', 'MPO']:
+    s1.sle(T=s1.T, P=s1.P, solute=solute)
+s1.show('cwt100')
+
+print('\nStream with 50 wt% Acetic acid at 3.67 deg C:')
+s2 = tmo.Stream('s2')
+s2.imass['Water']=1000
+s2.imass['AceticAcid'] = 1000
+s2.T = 3.67 + 273.15
+s2.sle(T=s2.T, P=s2.P, solute='AceticAcid')
+s2.show('cwt100')
+
+print('\nStream with 50 wt% Lactic acid at 3.67 deg C:')
+s2 = tmo.Stream('s2')
+s2.imass['Water']=1000
+s2.imass['LacticAcid'] = 1000
+s2.T = 3.67 + 273.15
+s2.sle(T=s2.T, P=s2.P, solute='LacticAcid')
+s2.show('cwt100')
+
+print('\nStream with 50 wt% Adipic acid at 3.67 deg C:')
+s2 = tmo.Stream('s2')
+s2.imass['Water']=1000
+s2.imass['AdipicAcid'] = 1000
+s2.T = 3.67 + 273.15
+s2.sle(T=s2.T, P=s2.P, solute='AdipicAcid')
+s2.show('cwt100')
+
 #%% Example_2
 LacticAcid = tmo.Chemical('LacticAcid')
 HP = tmo.Chemical(ID='HP', search_ID='3-hydroxypropionic acid')
