@@ -246,6 +246,7 @@ tea_5 = BluesTEA(
 
 #%% Example_6
 BDO = tmo.Chemical(ID='BDO', search_ID='2,3-Butanediol')
+BDO.Hf = -544.8	* 1000 # https://webbook.nist.gov/cgi/cbook.cgi?ID=C513859&Mask=FFF
 
 stream_6 = BlueStream(
         ID='stream_6',
@@ -280,37 +281,7 @@ tea_6 = BluesTEA(
                  aeration_rate=15e-3,
                  )
 
-#%% Example_7
-BDO = tmo.Chemical(ID='BDO', search_ID='2,3-Butanediol')
-
-stream_7 = BlueStream(
-        ID='stream_7',
-        composition_dict = {
-        "water": 6437.895913598838,
-        BDO: 277.2481072176166,
-        "Yeast": 20,
-        "CO2": 415.72100940270406
-        },
-        products = ['BDO',],
-        impurities = [
-            "water",
-                       
-                      ],
-        fermentation_feed_glucose_flow = 265 , #kmol/h # note: for corn, we get about 0.1567990 kmol-glucose/h per wet-metric-tonne-corn/d or about 0.677959 kg-glucose per wet-kg-corn; note also that the moisture content of corn is 85 wt%
-        )
-
-tea_7 = BluesTEA(
-    system_ID = 'sys1',
-                # system_ID=stream_7.ID+'_sys',
-                  bluestream=stream_7,
-                  upstream_feed='sucrose',
-                  upstream_feed_capacity=1000,
-                 products_and_purities={'BDO':0.99}, # {'product ID': purity in weight%}
-                 products_and_market_prices={'BDO':1.75}, # {'product ID': price in $/pure-kg})
-                 current_equipment=None,
-                 fermentation_residence_time=100., # h
-                 aeration_rate=15e-3,
-                 )
+#%% Example_7 - this was just Example_6 without organic impurities
 
 #%% Example_8
 BDO = tmo.Chemical(ID='BDO', search_ID='1,4-Butanediol')
