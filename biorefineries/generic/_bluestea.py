@@ -15,6 +15,11 @@ solvent_prices = {solvent: 5. for solvent in solvent_IDs} # solvent price defaul
 __all__=['BluesTEA',]
 
 class BluesTEA():
+    
+    _kmol_glucose_per_wet_kg_corn = 0.0037631783772848998
+    _kmol_glucose_per_wet_kg_sucrose = 0.005550744909966918
+    
+    
     def __init__(self, 
             system_ID = 'sys1',
                IRR=0.15, # 
@@ -28,7 +33,8 @@ class BluesTEA():
                upstream_feed='corn', 
                # upstream_feed_price=0.287, # Singh et al. 2022
                upstream_feed_price=None,
-               upstream_feed_capacity=None,# metric tonne/d
+               upstream_feed_capacity=None,# units: determined by upstream_feed_capacity_units
+               upstream_feed_capacity_units='kmol-Glucose-eq/h', # 'MT/d', 'kmol-Glucose-eq/h'
                products_and_purities={'AdipicAcid':0.995,}, # {'product ID': purity in weight%}
                products_and_market_prices={'AdipicAcid':4.088}, # {'product ID': price in $/pure-kg}
                aeration_rate=0.,
@@ -52,7 +58,13 @@ class BluesTEA():
         self.bluestream = bluestream
         self.solvent_prices = solvent_prices
         if upstream_feed_capacity:
-            upstream_feed_capacity*=1000/24 # kg/h
+            if upstream_feed_capacity_units=='kmol-Glucose-eq/h':
+                if upstream_feed == 'corn':
+                    upstream_feed_capacity /= self._kmol_glucose_per_wet_kg_corn
+                elif upstream_feed == 'sucrose':
+                    upstream_feed_capacity /= self._kmol_glucose_per_wet_kg_sucrose
+            elif upstream_feed_capacity_units == 'MT/d':
+                upstream_feed_capacity*=1000/24 # kg/h
         self.system_up_to_fermentation = system_up_to_fermentation =\
             load_set_and_get_upstream_sys(ID=system_ID+'_conversion',
                                                 bluestream=bluestream, 
@@ -60,7 +72,7 @@ class BluesTEA():
                                                 aeration_rate = aeration_rate,
                                                 aeration_time = aeration_time,
                                                 upstream_feed=upstream_feed, 
-                                                upstream_feed_capacity=upstream_feed_capacity, # kg/h
+                                                upstream_feed_capacity=upstream_feed_capacity,
                                                 )
         
         self.system = system = system_up_to_fermentation

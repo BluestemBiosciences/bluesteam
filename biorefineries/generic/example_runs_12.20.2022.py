@@ -10,7 +10,7 @@ from bluesteam.biorefineries.generic._bluestea import BluesTEA
 from bluesteam.biorefineries.generic.utils import BlueStream, has_required_properties
 import thermosteam as tmo
 
-#%%
+#%% Disable numba 
 # import os
 # os.environ['NUMBA_DISABLE_JIT'] = '1'
 
@@ -34,7 +34,7 @@ stream_1 = BlueStream(
                        "MPO",
                        
                       ],
-        fermentation_feed_glucose_flow = 265 , #kmol/h # note: for corn, we get about 0.1567990 kmol-glucose/h per wet-metric-tonne-corn/d or about 0.677959 kg-glucose per wet-kg-corn; note also that the moisture content of corn is 85 wt%
+        fermentation_feed_glucose_flow = 265 ,
         )
 
 tea_1 = BluesTEA(
@@ -42,7 +42,8 @@ tea_1 = BluesTEA(
                 # system_ID=stream_1.ID+'_sys',
                   bluestream=stream_1,
                   upstream_feed='corn',
-                  upstream_feed_capacity=1000,
+                  upstream_feed_capacity=stream_1.fermentation_feed_glucose_flow,
+                  upstream_feed_capacity_units='kmol-Glucose-eq/h',
                  products_and_purities={'AdipicAcid':0.99}, # {'product ID': purity in weight%}
                  products_and_market_prices={'AdipicAcid':1.75}, # {'product ID': price in $/pure-kg})
                  current_equipment=None,
@@ -62,7 +63,7 @@ for solute in ['AdipicAcid', 'AceticAcid', 'LacticAcid', 'MPO']:
     s1.sle(T=s1.T, P=s1.P, solute=solute)
 s1.show('cwt100')
 
-print('\nStream with 50 wt% Acetic acid at 3.67 deg C:')
+print('\nStream with 50 wt% Acetic acid after chilling to 3.67 degC and performing solid-liquid equilibrium:')
 s2 = tmo.Stream('s2')
 s2.imass['Water']=1000
 s2.imass['AceticAcid'] = 1000
@@ -70,7 +71,7 @@ s2.T = 3.67 + 273.15
 s2.sle(T=s2.T, P=s2.P, solute='AceticAcid')
 s2.show('cwt100')
 
-print('\nStream with 50 wt% Lactic acid at 3.67 deg C:')
+print('\nStream with 50 wt% Lactic acid after chilling to 3.67 degC and performing solid-liquid equilibrium:')
 s2 = tmo.Stream('s2')
 s2.imass['Water']=1000
 s2.imass['LacticAcid'] = 1000
@@ -78,7 +79,7 @@ s2.T = 3.67 + 273.15
 s2.sle(T=s2.T, P=s2.P, solute='LacticAcid')
 s2.show('cwt100')
 
-print('\nStream with 50 wt% Adipic acid at 3.67 deg C:')
+print('\nStream with 50 wt% Adipic acid after chilling to 3.67 degC and performing solid-liquid equilibrium:')
 s2 = tmo.Stream('s2')
 s2.imass['Water']=1000
 s2.imass['AdipicAcid'] = 1000
@@ -115,7 +116,7 @@ stream_2 = BlueStream(
             "SuccinicAcid",
                        
                       ],
-        fermentation_feed_glucose_flow = 265 , #kmol/h # note: for corn, we get about 0.1567990 kmol-glucose/h per wet-metric-tonne-corn/d or about 0.677959 kg-glucose per wet-kg-corn; note also that the moisture content of corn is 85 wt%
+        fermentation_feed_glucose_flow = 265 ,  
         )
 
 tea_2 = BluesTEA(
@@ -123,7 +124,8 @@ tea_2 = BluesTEA(
                 # system_ID=stream_2.ID+'_sys',
                   bluestream=stream_2,
                   upstream_feed='sucrose',
-                  upstream_feed_capacity=1000,
+                  upstream_feed_capacity=stream_2.fermentation_feed_glucose_flow,
+                  upstream_feed_capacity_units='kmol-Glucose-eq/h',
                  products_and_purities={'HP':0.99}, # {'product ID': purity in weight%}
                  products_and_market_prices={'HP':1.75}, # {'product ID': price in $/pure-kg})
                  current_equipment=None,
@@ -156,7 +158,7 @@ stream_3 = BlueStream(
             "AceticAcid",
                        
                       ],
-        fermentation_feed_glucose_flow = 265 , #kmol/h # note: for corn, we get about 0.1567990 kmol-glucose/h per wet-metric-tonne-corn/d or about 0.677959 kg-glucose per wet-kg-corn; note also that the moisture content of corn is 85 wt%
+        fermentation_feed_glucose_flow = 265 ,  
         )
 
 tea_3 = BluesTEA(
@@ -164,7 +166,8 @@ tea_3 = BluesTEA(
                 # system_ID=stream_3.ID+'_sys',
                   bluestream=stream_3,
                   upstream_feed='sucrose',
-                  upstream_feed_capacity=1000,
+                  upstream_feed_capacity=stream_3.fermentation_feed_glucose_flow,
+                  upstream_feed_capacity_units='kmol-Glucose-eq/h',
                  products_and_purities={'HP':0.99}, # {'product ID': purity in weight%}
                  products_and_market_prices={'HP':1.75}, # {'product ID': price in $/pure-kg})
                  current_equipment=None,
@@ -192,7 +195,7 @@ stream_4 = BlueStream(
             "AceticAcid",
                        
                       ],
-        fermentation_feed_glucose_flow = 265 , #kmol/h # note: for corn, we get about 0.1567990 kmol-glucose/h per wet-metric-tonne-corn/d or about 0.677959 kg-glucose per wet-kg-corn; note also that the moisture content of corn is 85 wt%
+        fermentation_feed_glucose_flow = 265 ,  
         )
 
 tea_4 = BluesTEA(
@@ -200,7 +203,8 @@ tea_4 = BluesTEA(
                 # system_ID=stream_4.ID+'_sys',
                   bluestream=stream_4,
                   upstream_feed='sucrose',
-                  upstream_feed_capacity=1000,
+                  upstream_feed_capacity=stream_4.fermentation_feed_glucose_flow,
+                  upstream_feed_capacity_units='kmol-Glucose-eq/h',
                  products_and_purities={'APO':0.99}, # {'product ID': purity in weight%}
                  products_and_market_prices={'APO':1.75}, # {'product ID': price in $/pure-kg})
                  current_equipment=None,
@@ -228,7 +232,7 @@ stream_5 = BlueStream(
             "AceticAcid",
                        
                       ],
-        fermentation_feed_glucose_flow = 265 , #kmol/h # note: for corn, we get about 0.1567990 kmol-glucose/h per wet-metric-tonne-corn/d or about 0.677959 kg-glucose per wet-kg-corn; note also that the moisture content of corn is 85 wt%
+        fermentation_feed_glucose_flow = 265 ,  
         )
 
 tea_5 = BluesTEA(
@@ -236,7 +240,8 @@ tea_5 = BluesTEA(
                 # system_ID=stream_5.ID+'_sys',
                   bluestream=stream_5,
                   upstream_feed='sucrose',
-                  upstream_feed_capacity=1000,
+                  upstream_feed_capacity=stream_5.fermentation_feed_glucose_flow,
+                  upstream_feed_capacity_units='kmol-Glucose-eq/h',
                  products_and_purities={'Butanol':0.99}, # {'product ID': purity in weight%}
                  products_and_market_prices={'Butanol':1.75}, # {'product ID': price in $/pure-kg})
                  current_equipment=None,
@@ -265,7 +270,7 @@ stream_6 = BlueStream(
             "AceticAcid",
                        
                       ],
-        fermentation_feed_glucose_flow = 265 , #kmol/h # note: for corn, we get about 0.1567990 kmol-glucose/h per wet-metric-tonne-corn/d or about 0.677959 kg-glucose per wet-kg-corn; note also that the moisture content of corn is 85 wt%
+        fermentation_feed_glucose_flow = 265 ,  
         )
 
 tea_6 = BluesTEA(
@@ -273,7 +278,8 @@ tea_6 = BluesTEA(
                 # system_ID=stream_6.ID+'_sys',
                   bluestream=stream_6,
                   upstream_feed='sucrose',
-                  upstream_feed_capacity=1000,
+                  upstream_feed_capacity=stream_6.fermentation_feed_glucose_flow,
+                  upstream_feed_capacity_units='kmol-Glucose-eq/h',
                  products_and_purities={'BDO':0.99}, # {'product ID': purity in weight%}
                  products_and_market_prices={'BDO':1.75}, # {'product ID': price in $/pure-kg})
                  current_equipment=None,
@@ -305,7 +311,7 @@ stream_8 = BlueStream(
             'IsoamylAcetate',
                        
                       ],
-        fermentation_feed_glucose_flow = 265 , #kmol/h # note: for corn, we get about 0.1567990 kmol-glucose/h per wet-metric-tonne-corn/d or about 0.677959 kg-glucose per wet-kg-corn; note also that the moisture content of corn is 85 wt%
+        fermentation_feed_glucose_flow = 265 ,  
         )
 
 tea_8 = BluesTEA(
@@ -313,7 +319,8 @@ tea_8 = BluesTEA(
                 # system_ID=stream_8.ID+'_sys',
                   bluestream=stream_8,
                   upstream_feed='sucrose',
-                  upstream_feed_capacity=1000,
+                  upstream_feed_capacity=stream_8.fermentation_feed_glucose_flow,
+                  upstream_feed_capacity_units='kmol-Glucose-eq/h',
                  products_and_purities={'BDO':0.99}, # {'product ID': purity in weight%}
                  products_and_market_prices={'BDO':1.75}, # {'product ID': price in $/pure-kg})
                  current_equipment=None,

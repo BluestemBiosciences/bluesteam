@@ -10,6 +10,7 @@ from biosteam import System
 import thermosteam as tmo
 from thermosteam import Stream
 
+
 def load_set_and_get_upstream_sys(ID, bluestream=None, fermentation_tau=None, simulate=False, 
                                        aeration_rate=0.,
                                        aeration_time=None,
@@ -40,8 +41,9 @@ def load_set_and_get_upstream_sys(ID, bluestream=None, fermentation_tau=None, si
     if fermentation_tau:
         V405.load_tau(fermentation_tau)
 
-
-
+    
+    streams['corn'].show(N=100)
+    print(V405.ins[0].imol['Glucose'], streams['corn'].F_mass)
     
     
     if upstream_feed=='corn':
@@ -56,10 +58,20 @@ def load_set_and_get_upstream_sys(ID, bluestream=None, fermentation_tau=None, si
             sucrose.imass['Glucose'] = 100.
         V405.ins[0] = sucrose
     
+    
+    # if units_till_fermentation:
+    #     for unit in units_till_fermentation:
+            # unit.simulate()
+    
+    for unit in list(corn.flowsheet.unit):
+        try:
+            unit.simulate()
+        except:
+            pass
+    
     bluestream.stream.F_mol *= V405.ins[0].imol['Glucose']/bluestream.fermentation_feed_glucose_flow # initial scaling for bluestream total flow
         
     units_till_fermentation = V405.get_upstream_units()
-                                               
     V405.simulate()
     
     # V405.show()
