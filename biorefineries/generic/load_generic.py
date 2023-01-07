@@ -42,10 +42,6 @@ def load_set_and_get_upstream_sys(ID, bluestream=None, fermentation_tau=None, si
         V405.load_tau(fermentation_tau)
 
     
-    streams['corn'].show(N=100)
-    print(V405.ins[0].imol['Glucose'], streams['corn'].F_mass)
-    
-    
     if upstream_feed=='corn':
         if upstream_feed_capacity:
             streams['corn'].F_mass = upstream_feed_capacity
