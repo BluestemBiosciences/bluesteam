@@ -233,7 +233,7 @@ class BluesTEA():
         return b
     
     def sep_sys_unit_result_tables(self):
-        return report.unit_result_tables([self.separation_system.units[0]]) + report.unit_result_tables(self.separation_system.units)
+        return report.unit_result_tables(self.separation_system.units)
     
     def set_financing_payoff_years(self, payoff_years): # integer
         self.tea.finance_years = payoff_years
