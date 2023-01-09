@@ -251,5 +251,5 @@ class BluesTEA():
             tea.finance_fraction += fraction*self.flowsheet(unit_ID).installed_cost/FCI
     
     def get_material_cost_breakdown(self):
-        op_hours = self.tea.operating_days
+        op_hours = self.tea.operating_hours
         return {i.ID: i.cost * op_hours for i in self.system.feeds if i.price}
