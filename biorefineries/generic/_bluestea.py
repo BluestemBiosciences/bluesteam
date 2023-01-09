@@ -249,3 +249,6 @@ class BluesTEA():
         tea.finance_fraction += amount/FCI
         for unit_ID, fraction in unit_fraction_dict.items():
             tea.finance_fraction += fraction*self.flowsheet(unit_ID).installed_cost/FCI
+    
+    def get_material_cost_breakdown(self):
+        return {i.ID: i.price for i in self.system.feeds if i.price}
