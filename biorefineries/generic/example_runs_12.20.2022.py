@@ -95,6 +95,7 @@ HP.Tm = 15 + 273.15 # CAS says < 25 C
 HP.Tb = 179.75 + 273.15 # CAS
 HP.Hf = LacticAcid.Hf
 HP.Pc = LacticAcid.Pc
+Ethanol = tmo.Chemical(ID="id_ethanol",search_ID='ethanol')
 
 stream_2 = BlueStream(
         ID='stream_2',
@@ -104,7 +105,7 @@ stream_2 = BlueStream(
        "Yeast": 20,
        "LacticAcid": 17.884760112870275,
        "AceticAcid": 10.791860228730412,
-       "Ethanol": 3.556724191556348,
+       Ethanol: 3.556724191556348,
        "SuccinicAcid": 7.113448383112774
         },
         products = ['HP',],
@@ -112,7 +113,7 @@ stream_2 = BlueStream(
             "water",
             "LacticAcid",
             "AceticAcid",
-            "Ethanol",
+            "id_ethanol",
             "SuccinicAcid",
                        
                       ],
@@ -327,3 +328,37 @@ tea_8 = BluesTEA(
                  fermentation_residence_time=100., # h
                  aeration_rate=15e-3,
                  )
+
+#%% Example_8
+# BDO = tmo.Chemical(ID='BDO', search_ID='1,4-Butanediol')
+# Ethanol = tmo.Chemical(ID="EtOH",search_ID='ethanol')
+
+stream_8 = BlueStream(
+        ID='stream_8',
+        composition_dict = {
+       # BDO: 245.24905484291597,
+        'Ethanol': 250.,
+        'Water': 1000.,
+        },
+        products = ['Ethanol',],
+        impurities = [
+            "water", "water",
+                       
+                      ],
+        fermentation_feed_glucose_flow = 265 ,  
+        )
+
+tea_8 = BluesTEA(
+    system_ID = 'sys1',
+                # system_ID=stream_8.ID+'_sys',
+                  bluestream=stream_8,
+                  upstream_feed='sucrose',
+                  upstream_feed_capacity=stream_8.fermentation_feed_glucose_flow,
+                  upstream_feed_capacity_units='kmol-Glucose-eq/h',
+                 products_and_purities={'Ethanol':0.99}, # {'product ID': purity in weight%}
+                 products_and_market_prices={'Ethanol':1.75}, # {'product ID': price in $/pure-kg})
+                 current_equipment=None,
+                 fermentation_residence_time=100., # h
+                 aeration_rate=15e-3,
+                 )
+
