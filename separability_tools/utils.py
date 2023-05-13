@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
+# Bluesteam
+# Copyright (C) 2023-, Sarang Bhagwat <sarangb2@illinois.edu>
+# 
+# This module is under the UIUC open-source license. See 
+# github.com/BioSTEAMDevelopmentGroup/biosteam/blob/master/LICENSE.txt
+# for license details.
 """
-Created on Thu Sep  1 16:17:45 2022
-
-@author: sarangbhagwat
 """
 
 import numpy as np

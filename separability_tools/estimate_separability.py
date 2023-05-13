@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
+# Bluesteam
+# Copyright (C) 2023-, Sarang Bhagwat <sarangb2@illinois.edu>
+# 
+# This module is under the UIUC open-source license. See 
+# github.com/BioSTEAMDevelopmentGroup/biosteam/blob/master/LICENSE.txt
+# for license details.
 """
-Created on Wed Sep  7 23:51:43 2022
-
-@author: sarangbhagwat
 """
 
 from bluesteam.separability_tools.utils import BlueStream, run_sequential_distillation, get_sorted_results
