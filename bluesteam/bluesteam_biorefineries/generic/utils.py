@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Bluesteam
-# Copyright (C) 2022-, Sarang Bhagwat <sarangb2@illinois.edu>,
-# 		       Yoel Cortes-Pena <yoelcortes@gmail.com>
+# Copyright (C) 2022-, Sarang Bhagwat <sarangb2@illinois.edu>
 # 
 # This module is under the MIT open-source license. See 
 # github.com/BluestemBiosciences/bluesteam/LICENSE.txt
@@ -11,9 +10,9 @@
 import numpy as np
 import thermosteam as tmo
 from thermosteam import Chemical, Stream
-from bluesteam.biorefineries import generic
+from bluesteam.bluesteam_biorefineries import generic
 
-from bluesteam.biorefineries.generic._chemicals import create_chemicals
+from bluesteam.bluesteam_biorefineries.generic._chemicals import create_chemicals
 set_thermo = tmo.settings.set_thermo
 
 __all__ = ('BlueStream', 'has_required_properties')

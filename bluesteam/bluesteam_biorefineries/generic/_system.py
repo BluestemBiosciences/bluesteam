@@ -10,9 +10,9 @@
 """
 import bluesteam as blst
 import biosteam as bst
-from bluesteam.biorefineries import generic as cn
+from bluesteam.bluesteam_biorefineries import generic as cn
 from biorefineries.sugarcane import create_ethanol_purification_system
-from bluesteam.biorefineries.generic._process_settings import price
+from bluesteam.bluesteam_biorefineries.generic._process_settings import price
 
 __all__ = ('create_system',)
 

@@ -7,9 +7,9 @@
 # for license details.
 """
 """
-from bluesteam.biorefineries import generic
-from bluesteam.biorefineries.generic._bluestea import BluesTEA
-from bluesteam.biorefineries.generic.utils import BlueStream, has_required_properties
+from bluesteam.bluesteam_biorefineries import generic
+from bluesteam.bluesteam_biorefineries.generic._bluestea import BluesTEA
+from bluesteam.bluesteam_biorefineries.generic.utils import BlueStream, has_required_properties
 import thermosteam as tmo
 
 #%% Disable numba 

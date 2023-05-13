@@ -11,14 +11,14 @@
 __version__ = '0.0.1'
 __author__ = 'Sarang S. Bhagwat'
 
-# %% Initialize AutoSynthesis
+# %% Initialize Bluesteam
 
-from . import biorefineries, separability_tools
+from . import bluesteam_biorefineries, separability_tools
 
 
 __all__ = (
-    'biorefineries', 'units',
-    *biorefineries.__all__,
+    'bluesteam_biorefineries', 'units',
+    *bluesteam_biorefineries.__all__,
     *separability_tools.__all__,
     
 )

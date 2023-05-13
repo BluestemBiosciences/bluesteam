@@ -7,7 +7,7 @@
 # for license details.
 """
 """
-from bluesteam.biorefineries import generic as corn
+from bluesteam.bluesteam_biorefineries import generic as corn
 from biosteam import System
 import thermosteam as tmo
 from thermosteam import Stream

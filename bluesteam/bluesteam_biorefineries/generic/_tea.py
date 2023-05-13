@@ -9,7 +9,7 @@
 """
 """
 from biosteam.process_tools import UnitGroup
-from bluesteam.biorefineries import generic as cn
+from bluesteam.bluesteam_biorefineries import generic as cn
 from biorefineries.sugarcane import ConventionalEthanolTEA
 
 __all__ = ('create_tea', 'tea_summary')
