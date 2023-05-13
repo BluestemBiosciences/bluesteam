@@ -8,17 +8,7 @@
 # for license details.
 """
 """
-__version__ = '0.0.2'
-__author__ = 'Sarang S. Bhagwat'
+from . import generic
 
-# %% Initialize Bluesteam
-
-from . import bluesteam_biorefineries, separability_tools
-
-
-__all__ = (
-    'bluesteam_biorefineries', 'units',
-    *bluesteam_biorefineries.__all__,
-    *separability_tools.__all__,
-    
-)
+__all__ = ['generic'
+]
