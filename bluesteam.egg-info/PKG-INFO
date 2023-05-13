@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: bluesteam
-Version: 0.0.2
+Version: 0.0.4
 Summary: Bluestem leverages AutoSynthesis, BioSTEAM, and biorefineries in BioIndustrial-Park for automated process synthesis and design of biorefineries.
 Home-page: https://github.com/BluestemBiosciences/bluesteam
 Author: Sarang S. Bhagwat

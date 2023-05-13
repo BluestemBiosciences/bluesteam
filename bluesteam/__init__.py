@@ -8,7 +8,7 @@
 # for license details.
 """
 """
-__version__ = '0.0.2'
+__version__ = '0.0.4'
 __author__ = 'Sarang S. Bhagwat'
 
 # %% Initialize Bluesteam

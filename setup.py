@@ -14,7 +14,7 @@ from setuptools import setup
 setup(
     name='bluesteam',
     packages=['bluesteam'],
-    version='0.0.2',    
+    version='0.0.4',    
     description='Bluestem leverages AutoSynthesis, BioSTEAM, and biorefineries in BioIndustrial-Park for automated process synthesis and design of biorefineries.',
     url='https://github.com/BluestemBiosciences/bluesteam',
     author='Sarang S. Bhagwat',
@@ -24,7 +24,11 @@ setup(
                       'biorefineries==2.23.18',   
                       'autosynthesis==0.0.17',
                       ],
-
+    package_data=
+        {'bluesteam': ['bluesteam_biorefineriest/*',
+                      'separability_tools/*',
+                      ]},
+   
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Science/Research',
