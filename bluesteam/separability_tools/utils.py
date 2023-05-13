@@ -2,12 +2,11 @@
 # Bluesteam
 # Copyright (C) 2022-, Sarang Bhagwat <sarangb2@illinois.edu>
 # 
-# This module is under the UIUC open-source license. See 
-# github.com/BioSTEAMDevelopmentGroup/biosteam/blob/master/LICENSE.txt
+# This module is under the MIT open-source license. See 
+# github.com/BluestemBiosciences/bluesteam/LICENSE.txt
 # for license details.
 """
 """
-
 import numpy as np
 from matplotlib import pyplot as plt
 import biosteam as bst

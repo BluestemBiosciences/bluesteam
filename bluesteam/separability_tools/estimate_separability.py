@@ -2,12 +2,11 @@
 # Bluesteam
 # Copyright (C) 2022-, Sarang Bhagwat <sarangb2@illinois.edu>
 # 
-# This module is under the UIUC open-source license. See 
-# github.com/BioSTEAMDevelopmentGroup/biosteam/blob/master/LICENSE.txt
+# This module is under the MIT open-source license. See 
+# github.com/BluestemBiosciences/bluesteam/LICENSE.txt
 # for license details.
 """
 """
-
 from bluesteam.separability_tools.utils import BlueStream, run_sequential_distillation, get_sorted_results
 from thermosteam import Chemical
 from datetime import datetime
