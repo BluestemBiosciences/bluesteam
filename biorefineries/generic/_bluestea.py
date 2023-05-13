@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Thu Oct 13 11:38:02 2022
-
-@author: saran
+# Bluesteam
+# Copyright (C) 2023-, Sarang Bhagwat <sarangb2@illinois.edu>
+# 
+# This module is under the UIUC open-source license. See 
+# github.com/BioSTEAMDevelopmentGroup/biosteam/blob/master/LICENSE.txt
+# for license details.
 """
 from bluesteam.biorefineries.generic._tea import create_tea
 from bluesteam.biorefineries.generic.load_generic import load_set_and_get_upstream_sys

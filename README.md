@@ -1,6 +1,7 @@
-# bluesteam
+# Bluesteam
 
-Currently contains modules from Bioindustrial-Park; these will be removed prior to release
+Bluestem leverages AutoSynthesis, BioSTEAM, and biorefineries in BioIndustrial-Park for automated process synthesis and
+design of biorefineries.
 
 Requires:
 biorefineries==2.23.18
