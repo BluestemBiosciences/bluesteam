@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Bluesteam
-# Copyright (C) 2023-, Sarang Bhagwat <sarangb2@illinois.edu>,
+# Copyright (C) 2022-, Sarang Bhagwat <sarangb2@illinois.edu>,
 # 		       Yoel Cortes-Pena <yoelcortes@gmail.com>
 # 
 # This module is under the UIUC open-source license. See 
