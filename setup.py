@@ -25,7 +25,7 @@ setup(
                       'autosynthesis==0.0.17',
                       ],
     package_data=
-        {'bluesteam': ['bluesteam_biorefineriest/*',
+        {'bluesteam': ['bluesteam_biorefineries/*',
                       'separability_tools/*',
                       ]},
    
